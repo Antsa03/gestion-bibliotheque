@@ -32,7 +32,7 @@ model Sanction {
   sanction_fin   DateTime @db.Date
   sanction_motif String   @db.Text
   user_id        Int
-  user           User     @relation(fields: [user_id], references: [user_id])
+  user           User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Emprunt {
@@ -42,9 +42,9 @@ model Emprunt {
   emprunt_retour_prevue DateTime   @db.Date
   emprunt_statut        String     @db.Text
   user_id               Int
-  user                  User       @relation(fields: [user_id], references: [user_id])
+  user                  User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
   exemplaire_id         Int
-  exemplaire            Exemplaire @relation(fields: [exemplaire_id], references: [exemplaire_id])
+  exemplaire            Exemplaire @relation(fields: [exemplaire_id], references: [exemplaire_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Livre {
@@ -57,9 +57,9 @@ model Livre {
   couverture      String       @db.Text
   exemplaires     Exemplaire[]
   auteur_id       Int
-  auteur          Auteur       @relation(fields: [auteur_id], references: [auteur_id])
+  auteur          Auteur       @relation(fields: [auteur_id], references: [auteur_id], onDelete: Cascade, onUpdate: Cascade)
   proprietaire_id Int
-  proprietaire    Proprietaire @relation(fields: [proprietaire_id], references: [proprietaire_id])
+  proprietaire    Proprietaire @relation(fields: [proprietaire_id], references: [proprietaire_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Exemplaire {
@@ -67,7 +67,7 @@ model Exemplaire {
   cote           String    @db.Text
   exemplaire_num Int
   livre_id       Int
-  livre          Livre     @relation(fields: [livre_id], references: [livre_id])
+  livre          Livre     @relation(fields: [livre_id], references: [livre_id], onDelete: Cascade, onUpdate: Cascade)
   emprunts       Emprunt[]
 }
 
