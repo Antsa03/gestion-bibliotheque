@@ -10,6 +10,12 @@ cp .env.copy .env
 
 Adapt the .env to your postgresql database connection
 
+After that run this command
+
+```bash
+yarn prisma migrate dev
+```
+
 First, run the development server:
 
 ```bash
