@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id   Int        @id @default(autoincrement())
+  name      String     @db.Text
+  firstname String     @db.Text
+  address   String     @db.Text
+  phone     String     @db.VarChar(12)
+  role      String     @db.Text
+  email     String     @unique
+  password  String     @db.Text
+  sanctions Sanction[]
+  emprunts  Emprunt[]
+}
+
+model Auteur {
+  auteur_id  Int     @id @default(autoincrement())
+  auteur_nom String
+  livres     Livre[]
+}
+
+model Sanction {
+  id_sanction    Int      @id @default(autoincrement())
+  sanction_deb   DateTime @db.Date
+  sanction_fin   DateTime @db.Date
+  sanction_motif String   @db.Text
+  user_id        Int
+  user           User     @relation(fields: [user_id], references: [user_id])
+}
+
+model Emprunt {
+  emprunt_id            Int        @id @default(autoincrement())
+  emprunt_date          DateTime
+  emprunt_retour        DateTime?  @db.Date
+  emprunt_retour_prevue DateTime   @db.Date
+  emprunt_statut        String     @db.Text
+  user_id               Int
+  user                  User       @relation(fields: [user_id], references: [user_id])
+  exemplaire_id         Int
+  exemplaire            Exemplaire @relation(fields: [exemplaire_id], references: [exemplaire_id])
+}
+
+model Livre {
+  livre_id        Int          @id @default(autoincrement())
+  titre           String       @db.Text
+  nb_pages        Int
+  description     String       @db.Text
+  type            String       @db.Text
+  domaine         String       @db.Text
+  couverture      String       @db.Text
+  exemplaires     Exemplaire[]
+  auteur_id       Int
+  auteur          Auteur       @relation(fields: [auteur_id], references: [auteur_id])
+  proprietaire_id Int
+  proprietaire    Proprietaire @relation(fields: [proprietaire_id], references: [proprietaire_id])
+}
+
+model Exemplaire {
+  exemplaire_id  Int       @id @default(autoincrement())
+  cote           String    @db.Text
+  exemplaire_num Int
+  livre_id       Int
+  livre          Livre     @relation(fields: [livre_id], references: [livre_id])
+  emprunts       Emprunt[]
+}
+
+model Proprietaire {
+  proprietaire_id  Int     @id @default(autoincrement())
+  proprietaire_nom String  @db.Text
+  livres           Livre[]
+}
