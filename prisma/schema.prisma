@@ -27,7 +27,7 @@ model Auteur {
 }
 
 model Sanction {
-  id_sanction    Int      @id @default(autoincrement())
+  sanction_id    Int      @id @default(autoincrement())
   sanction_deb   DateTime @db.Date
   sanction_fin   DateTime @db.Date
   sanction_motif String   @db.Text
