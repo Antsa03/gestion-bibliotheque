@@ -43,8 +43,8 @@ model Emprunt {
   emprunt_statut        String     @db.Text
   user_id               Int
   user                  User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  exemplaire_id         Int
-  exemplaire            Exemplaire @relation(fields: [exemplaire_id], references: [exemplaire_id], onDelete: Cascade, onUpdate: Cascade)
+  code_barre         String
+  exemplaire            Exemplaire @relation(fields: [ code_barre], references: [code_barre], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Livre {
@@ -54,7 +54,8 @@ model Livre {
   description     String       @db.Text
   type            String       @db.Text
   domaine         String       @db.Text
-  couverture      String       @db.Text //Type type fichier (image)
+  couverture      String       @db.Text //Input de type fichier (image)
+  livre_numerique String       @db.Text //Input de fichier fichier (document)
   exemplaires     Exemplaire[]
   auteur_id       Int
   auteur          Auteur       @relation(fields: [auteur_id], references: [auteur_id], onDelete: Cascade, onUpdate: Cascade)
@@ -63,13 +64,13 @@ model Livre {
 }
 
 model Exemplaire {
-  exemplaire_id  Int       @id @default(autoincrement())
+  code_barre     String    @id  // Utilisation du code-barres comme clé primaire
   cote           String    @db.Text
-  exemplaire_num String @db.Text //Input type fichier
   livre_id       Int
   livre          Livre     @relation(fields: [livre_id], references: [livre_id], onDelete: Cascade, onUpdate: Cascade)
   emprunts       Emprunt[]
 }
+
 
 model Proprietaire {
   proprietaire_id  Int     @id @default(autoincrement())
