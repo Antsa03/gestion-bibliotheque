@@ -54,7 +54,7 @@ model Livre {
   description     String       @db.Text
   type            String       @db.Text
   domaine         String       @db.Text
-  couverture      String       @db.Text
+  couverture      String       @db.Text //Type type fichier (image)
   exemplaires     Exemplaire[]
   auteur_id       Int
   auteur          Auteur       @relation(fields: [auteur_id], references: [auteur_id], onDelete: Cascade, onUpdate: Cascade)
@@ -65,7 +65,7 @@ model Livre {
 model Exemplaire {
   exemplaire_id  Int       @id @default(autoincrement())
   cote           String    @db.Text
-  exemplaire_num Int
+  exemplaire_num String @db.Text //Input type fichier
   livre_id       Int
   livre          Livre     @relation(fields: [livre_id], references: [livre_id], onDelete: Cascade, onUpdate: Cascade)
   emprunts       Emprunt[]
