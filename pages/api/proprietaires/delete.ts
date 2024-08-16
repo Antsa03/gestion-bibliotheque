@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma-client";
-import { Auteur } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -7,16 +6,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    if (req.method !== "PUT")
+    if (req.method !== "DELETE")
       return res.status(401).json("Méthode non autorisé");
-    const auteur: Auteur = req.body;
-    const update_auteur = await prisma.auteur.update({
-      where: { auteur_id: auteur.auteur_id },
-      data: {
-        auteur_nom: auteur.auteur_nom,
-      },
+    const { id } = req.body;
+    const delete_proprietaire = await prisma.proprietaire.delete({
+      where: { proprietaire_id: id },
     });
-    return res.status(200).json(update_auteur);
+    return res.status(200).json(delete_proprietaire);
   } catch (error) {
     console.error(error);
     return res.status(500).json(error);

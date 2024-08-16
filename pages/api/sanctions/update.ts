@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   try {
     const sanction: Sanction = req.body;
-    const create_sanction = await prisma.sanction.update({
+    const update_sanction = await prisma.sanction.update({
       where: { sanction_id: sanction.sanction_id },
       data: {
         sanction_deb: new Date(sanction.sanction_deb),
@@ -17,7 +17,7 @@ export default async function handler(
         user_id: sanction.user_id,
       },
     });
-    return res.status(200).json(create_sanction);
+    return res.status(200).json(update_sanction);
   } catch (error) {
     console.error(error);
     return res.status(500).json(error);
