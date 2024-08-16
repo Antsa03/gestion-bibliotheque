@@ -52,7 +52,7 @@ model Livre {
   titre           String       @db.Text
   nb_pages        Int
   description     String       @db.Text
-  type            String       @db.Text
+  type_livre      String       @db.Text
   domaine         String       @db.Text
   couverture      String       @db.Text //Input de type fichier (image)
   livre_numerique String       @db.Text //Input de fichier fichier (document)
