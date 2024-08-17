@@ -37,7 +37,7 @@ model Sanction {
 
 model Emprunt {
   emprunt_id            Int        @id @default(autoincrement())
-  emprunt_date          DateTime
+  emprunt_date          DateTime   @db.Date
   emprunt_retour        DateTime?  @db.Date //Pas de champ d'input
   emprunt_retour_prevue DateTime   @db.Date
   emprunt_statut        Boolean    @default(true) //Pas de champ d'input
@@ -55,7 +55,7 @@ model Livre {
   type_livre      String       @db.Text
   domaine         String       @db.Text
   couverture      String       @db.Text //Input de type fichier (image)
-  livre_numerique String       @db.Text //Input de fichier fichier (document)
+  livre_numerique String?       @db.Text //Input de fichier fichier (document)
   auteur_id       Int
   proprietaire_id Int
   exemplaires     Exemplaire[]
