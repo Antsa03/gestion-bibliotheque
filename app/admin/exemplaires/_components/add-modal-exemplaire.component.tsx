@@ -80,7 +80,7 @@ export default function AddModalExemplaire() {
   return (
     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
       <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
-        <CirclePlus className="h-5 w-5 mr-2" /> Ajouter une nouvelle exemplaire
+        <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouvel exemplaire
       </Button>
       <DialogContent>
         <DialogHeader>

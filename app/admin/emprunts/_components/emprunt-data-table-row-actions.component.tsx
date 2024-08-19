@@ -63,20 +63,23 @@ export function DataEmpruntRowActions({ row }: { row: Row<Emprunt> }) {
         isEditOpen={isEditOpen}
         setIsEditOpen={setIsEditOpen}
       />
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              className="text-blue-500"
-              variant="link"
-              onClick={() => actionRendre(emprunt.emprunt_id)}
-            >
-              <UndoDot className="h-6 w-6" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Rendre</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      {emprunt.emprunt_statut ? (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className="text-blue-500"
+                variant="link"
+                onClick={() => actionRendre(emprunt.emprunt_id)}
+              >
+                <UndoDot className="h-6 w-6" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Rendre</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : null}
+
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

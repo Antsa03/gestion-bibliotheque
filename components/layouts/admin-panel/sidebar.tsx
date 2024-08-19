@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UtensilsCrossed } from "lucide-react";
+import { LibraryBig } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
 import { Button } from "@/components/ui/button";
@@ -29,9 +29,9 @@ export function Sidebar() {
           variant="link"
           asChild
         >
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/admin/dashboard" className="flex items-center gap-2">
             {/* Logo de l'application */}
-            <UtensilsCrossed className="w-6 h-6 mr-1" />
+            <LibraryBig className="w-6 h-6 mr-1" />
             <h1
               className={cn(
                 "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
@@ -40,7 +40,7 @@ export function Sidebar() {
                   : "translate-x-0 opacity-100"
               )}
             >
-              Neo Restaurant
+              Bibliothèque
             </h1>
           </Link>
         </Button>

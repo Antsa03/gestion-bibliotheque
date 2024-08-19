@@ -68,7 +68,7 @@ export function ExemplaireDataTable({ exemplaires }: ExemplaireDataTableProps) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Recherche par nom ..."
+          placeholder="Recherche par titre ..."
           value={(table.getColumn("titre")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("titre")?.setFilterValue(event.target.value)

@@ -176,7 +176,7 @@ export const columns: ColumnDef<Emprunt>[] = [
   {
     accessorKey: "emprunt_statut",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Motif" />
+      <DataTableColumnHeader column={column} title="Statut" />
     ),
     cell: ({ row }) => (
       <div>{row.getValue("emprunt_statut") ? "En cours" : "Terminé"}</div>
