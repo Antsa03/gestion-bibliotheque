@@ -88,18 +88,17 @@ function LivresPage() {
       const matchesSearch = livre.titre
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      const matchesType =
-        typeFilter === "Tous" || livre.type_livre === typeFilter;
+      const matchesType = typeFilter === "" || livre.type_livre === typeFilter;
       const matchesDomaine =
-        domaineFilter === "Tous" || livre.domaine === domaineFilter;
+        domaineFilter === "" || livre.domaine === domaineFilter;
       return matchesSearch && matchesType && matchesDomaine;
     });
   }, [livres, searchTerm, typeFilter, domaineFilter]);
 
   const resetFilters = () => {
     setSearchTerm("");
-    setTypeFilter("Tous");
-    setDomaineFilter("Tous");
+    setTypeFilter("");
+    setDomaineFilter("");
   };
 
   if (isLoading) return <div>Chargement ...</div>;
@@ -123,7 +122,6 @@ function LivresPage() {
           <SelectContent>
             <SelectGroup className="h-60">
               <SelectLabel>Type du livre</SelectLabel>
-              <SelectItem value="Tous">Tous les types</SelectItem>
               <SelectItem value="Roman">Roman</SelectItem>
               <SelectItem value="Nouvelle">Nouvelle</SelectItem>
               <SelectItem value="Poésie">Poésie</SelectItem>
@@ -146,7 +144,6 @@ function LivresPage() {
           <SelectContent>
             <SelectGroup className="h-60">
               <SelectLabel>Domaine</SelectLabel>
-              <SelectItem value="Tous">Tous les domaines</SelectItem>
               <SelectItem value="Narratif">Narratif</SelectItem>
               <SelectItem value="Théâtral">Théâtral</SelectItem>
               <SelectItem value="Poétique">Poétique</SelectItem>

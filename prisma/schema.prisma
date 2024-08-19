@@ -11,9 +11,10 @@ model User {
   user_id   Int        @id @default(autoincrement())
   name      String     @db.Text
   firstname String     @db.Text
+  profile   String     @default("user.png") @db.Text
   address   String     @db.Text
   phone     String     @db.VarChar(12)
-  role      String     @db.Text
+  role      String     @default("Adhérent") @db.Text
   email     String     @unique
   password  String     @db.Text
   sanctions Sanction[]
@@ -42,9 +43,9 @@ model Emprunt {
   emprunt_retour_prevue DateTime   @db.Date
   emprunt_statut        Boolean    @default(true) //Pas de champ d'input
   user_id               Int
-  code_barre            String
+  isbn                  String
   user                  User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  exemplaire            Exemplaire @relation(fields: [code_barre], references: [code_barre], onDelete: Cascade, onUpdate: Cascade)
+  exemplaire            Exemplaire @relation(fields: [isbn], references: [isbn], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Livre {
@@ -55,7 +56,7 @@ model Livre {
   type_livre      String       @db.Text
   domaine         String       @db.Text
   couverture      String       @db.Text //Input de type fichier (image)
-  livre_numerique String?       @db.Text //Input de fichier fichier (document)
+  livre_numerique String?      @db.Text //Input de fichier fichier (document)
   auteur_id       Int
   proprietaire_id Int
   exemplaires     Exemplaire[]
@@ -64,7 +65,7 @@ model Livre {
 }
 
 model Exemplaire {
-  code_barre String    @id // Utilisation du code-barres comme clé primaire
+  isbn       String    @id @db.Text
   cote       String    @db.Text
   livre_id   Int
   disponible Boolean   @default(true) //Pas de champs d'input

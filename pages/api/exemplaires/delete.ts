@@ -10,7 +10,7 @@ export default async function handler(
       return res.status(401).json("Méthode non autorisé");
     const { id } = req.body;
     const delete_exemplaire = await prisma.exemplaire.delete({
-      where: { code_barre: id },
+      where: { isbn: id },
       include: {
         livre: true,
       },

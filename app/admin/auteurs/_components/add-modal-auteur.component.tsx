@@ -23,7 +23,6 @@ export default function AddModalAuteur() {
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors },
   } = useForm<Auteur>({
     mode: "all",
@@ -55,9 +54,7 @@ export default function AddModalAuteur() {
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">
-            Ajout de nouvel auteur
-          </DialogTitle>
+          <DialogTitle>Ajout de nouvel auteur</DialogTitle>
           <DialogDescription>
             Formulaire pour ajouter de nouvel auteur
           </DialogDescription>

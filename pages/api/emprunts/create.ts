@@ -23,7 +23,7 @@ export default async function handler(
     });
     if (create_emprunt) {
       await prisma.exemplaire.update({
-        where: { code_barre: create_emprunt.code_barre },
+        where: { isbn: create_emprunt.isbn },
         data: {
           disponible: false,
         },

@@ -6,7 +6,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const sanctions = await prisma.sanction.findMany();
+    const sanctions = await prisma.sanction.findMany({
+      include: {
+        user: true,
+      },
+    });
     return res.status(200).json(sanctions);
   } catch (error) {
     console.error(error);

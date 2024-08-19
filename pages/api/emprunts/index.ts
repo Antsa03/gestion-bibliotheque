@@ -8,7 +8,11 @@ export default async function handler(
   try {
     const emprunts = await prisma.emprunt.findMany({
       include: {
-        exemplaire: true,
+        exemplaire: {
+          include: {
+            livre: true,
+          },
+        },
         user: true,
       },
     });

@@ -18,7 +18,7 @@ export default async function handler(
     });
     if (rendre) {
       await prisma.exemplaire.update({
-        where: { code_barre: rendre.code_barre },
+        where: { isbn: rendre.isbn },
         data: {
           disponible: true,
         },

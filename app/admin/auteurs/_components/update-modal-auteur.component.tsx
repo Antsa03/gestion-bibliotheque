@@ -56,11 +56,9 @@ export default function UpdateModalAuteur({
     <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">
-            Ajout de nouvel auteur
-          </DialogTitle>
+          <DialogTitle>Modification de l'auteur</DialogTitle>
           <DialogDescription>
-            Formulaire pour modifier de nouvel auteur
+            Formulaire pour modifier l'auteur
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAuteur)}>

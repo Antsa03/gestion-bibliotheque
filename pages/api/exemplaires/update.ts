@@ -11,7 +11,7 @@ export default async function handler(
       return res.status(401).json("Méthode non autorisé");
     const exemplaire: Exemplaire = req.body;
     const update_exemplaire = await prisma.exemplaire.update({
-      where: { code_barre: exemplaire.code_barre },
+      where: { isbn: exemplaire.isbn },
       data: {
         cote: exemplaire.cote,
         livre_id: exemplaire.livre_id,

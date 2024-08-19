@@ -13,7 +13,13 @@ export default async function handler(
     const user: User = req.body;
     const create_user = await prisma.user.create({
       data: {
-        ...user,
+        profile: user.profile === "" ? "user.png" : user.profile,
+        name: user.name.toUpperCase(),
+        firstname: user.firstname,
+        address: user.address,
+        phone: user.phone,
+        role: user.role,
+        email: user.email,
         password: await bcryptjs.hash(user.password, 10),
       },
     });
