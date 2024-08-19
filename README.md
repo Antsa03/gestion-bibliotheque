@@ -10,6 +10,12 @@ cp .env.copy .env
 
 Adapt the .env to your postgresql database connection
 
+```bash
+cp .env.local.copy .env.local
+```
+
+Adjust the .env.local
+
 After that run this command
 
 ```bash
