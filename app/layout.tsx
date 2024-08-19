@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "@/providers/theme-provider";
-import ReactQueryProvider from "@/providers/react-query.provider";
+import ReactQueryProvider from "@/providers/react-query-provider";
+import { Navbar } from "@/components/layouts/adherent-panel/navbar-client";
+import SessionProviderComponent from "@/providers/session-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -40,9 +42,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </ThemeProvider>
+        <SessionProviderComponent>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Navbar />
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </ThemeProvider>
+        </SessionProviderComponent>
       </body>
     </html>
   );

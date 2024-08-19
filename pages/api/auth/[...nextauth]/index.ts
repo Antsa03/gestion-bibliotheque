@@ -12,7 +12,10 @@ const authOptions: NextAuthOptions = {
       name: "credentials",
       credentials: {},
       async authorize(credentials) {
-        const { email, password }: any = credentials;
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
 
         if (!credentials) return null;
 
@@ -29,11 +32,7 @@ const authOptions: NextAuthOptions = {
 
         return {
           id: user.user_id.toString(),
-          email: user.email,
-          name: user.name + " " + user.firstname,
-          userRole: user.role,
-          profil: user.profile,
-          utilisateur: user,
+          ...user,
         };
       },
     }),
