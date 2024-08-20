@@ -58,6 +58,7 @@ export default function AddModalLivre() {
   const create_livre = useCreate<Livre>("/api/livres/create", () => {
     showToast("Information", "Le livre a été créé avec succès", "success");
     queryClient.invalidateQueries({ queryKey: ["livres"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     setIsAddOpen(false);
   });
 

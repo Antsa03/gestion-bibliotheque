@@ -1,10 +1,5 @@
 import {
   LayoutGrid,
-  AlignHorizontalSpaceAround,
-  HandPlatter,
-  SendToBack,
-  CalendarFold,
-  LucideHome,
   ScanText,
   BookAIcon,
   Library,

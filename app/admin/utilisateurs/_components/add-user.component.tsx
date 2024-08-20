@@ -51,6 +51,7 @@ function AddUserComponent() {
     );
     setIsAddOpen(false);
     queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard"] });
   });
   const onSubmit = async (data: User) => {
     const formData = new FormData();

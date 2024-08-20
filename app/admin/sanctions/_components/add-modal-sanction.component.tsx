@@ -52,6 +52,7 @@ export default function AddModalSanction() {
   const create_sanction = useCreate<Sanction>("/api/sanctions/create", () => {
     showToast("Information", "La sanction a été créée avec succès", "success");
     queryClient.invalidateQueries({ queryKey: ["sanctions"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     setIsAddOpen(false);
   });
 

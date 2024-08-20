@@ -58,6 +58,7 @@ export default function AddModalExemplaire() {
         "success"
       );
       queryClient.invalidateQueries({ queryKey: ["exemplaires"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       setIsAddOpen(false);
     }
   );

@@ -45,6 +45,7 @@ function RegisterModal({
     showToast("Information", "Votre compte à été créé avec succès", "success");
     setIsRegisterOpen(false);
     queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard"] });
   });
   const onSubmit = async (data: User) => {
     const formData = new FormData();

@@ -67,6 +67,7 @@ export default function AddModalEmprunt() {
   const create_emprunt = useCreate<Emprunt>("/api/emprunts/create", () => {
     showToast("Information", "L'emprunt a été créé avec succès", "success");
     queryClient.invalidateQueries({ queryKey: ["emprunts"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     setIsAddOpen(false);
   });
 

@@ -76,6 +76,9 @@ export function UserNav() {
             <p className="text-xs leading-none text-muted-foreground">
               {session?.email}
             </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {session?.role}
+            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -85,7 +88,7 @@ export function UserNav() {
             onClick={() => setIsChangePasswordOpen(true)}
           >
             <RectangleEllipsis className="w-4 h-4 mr-3 text-muted-foreground" />
-            Changer de mot de passe
+            Changer le mot de passe
           </DropdownMenuItem>
           <DropdownMenuItem
             className="hover:cursor-pointer flex items-center"
