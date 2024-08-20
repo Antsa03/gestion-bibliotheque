@@ -1,11 +1,11 @@
 "use client";
 import { ModeToggle } from "@/components/mode-toggle";
-import { UserNav } from "./user-nav";
 import LoginModal from "@/components/customs/login-modal.compent";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { LibraryBig } from "lucide-react";
+import { UserNav } from "../user-nav";
 
 export function Navbar() {
   const { data: session } = useSession();

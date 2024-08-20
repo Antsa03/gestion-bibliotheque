@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ResponsiveDialog } from "../responsive-dialog";
 import { Button } from "../ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { DialogFooter } from "../ui/dialog";
 import { signIn } from "next-auth/react";
+import RegisterModal from "./register-modal.component";
 
 type Login = {
   email: string;
@@ -18,7 +19,11 @@ function LoginModal() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // État pour le message d'erreur
-  const { register, handleSubmit } = useForm<Login>();
+  //L'état du modal
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const { register, reset, handleSubmit } = useForm<Login>({
+    mode: "all",
+  });
 
   const handleSubmitLogin: SubmitHandler<Login> = async (data) => {
     try {
@@ -44,7 +49,19 @@ function LoginModal() {
       setErrorMessage(""); // Réinitialiser le message d'erreur lors de la saisie
     }
   };
-  console.log("LoginModal rendu");
+
+  const openRegisterModal = () => {
+    setIsLoginOpen(false);
+    setIsRegisterOpen(true);
+  };
+
+  useEffect(() => {
+    if (!isLoginOpen) {
+      reset();
+      setErrorMessage("");
+    }
+  }, [isLoginOpen, reset]);
+
   return (
     <>
       <Button onClick={() => setIsLoginOpen(true)}>Se connecter</Button>
@@ -62,9 +79,12 @@ function LoginModal() {
                 Email
               </Label>
               <Input
-                {...register("email")}
+                {...register("email", {
+                  required: "L'email est requis",
+                })}
                 className="col-span-3"
-                onChange={handleInputChange} // Effacer le message d'erreur lors de la saisie
+                onChange={handleInputChange}
+                placeholder="exemple@mail.com"
               />
             </div>
             {/* Mot de passe */}
@@ -74,10 +94,12 @@ function LoginModal() {
               </Label>
               <div className="col-span-3 relative">
                 <Input
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Le mot de passe est requis",
+                  })}
                   type={showPassword ? "text" : "password"}
                   className={`col-span-3`}
-                  onChange={handleInputChange} // Effacer le message d'erreur lors de la saisie
+                  onChange={handleInputChange}
                 />
                 <Button
                   type="button"
@@ -94,23 +116,31 @@ function LoginModal() {
           {errorMessage && (
             <p className="text-red-500 text-center mb-3">{errorMessage}</p>
           )}
-          <DialogFooter className="gap-4">
-            <Button type="submit" className="min-w-20">
-              Ok
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setIsLoginOpen(false);
-                setErrorMessage(""); // Réinitialiser le message d'erreur lors de la fermeture
-              }}
-            >
-              Annuler
-            </Button>
+          <DialogFooter>
+            <div className="w-full gap-4">
+              <div className="w-full px-10 py-2">
+                <Button type="submit" className="w-full">
+                  Se connecter
+                </Button>
+              </div>
+              <div className="w-full flex flex-col justify-center items-center gap-0">
+                <p>Vous n'avez pas de compte.</p>
+                <Button
+                  onClick={openRegisterModal}
+                  className="w-full bg-none text-blue-500"
+                  variant="ghost"
+                >
+                  S'inscrire maintenant
+                </Button>
+              </div>
+            </div>
           </DialogFooter>
         </form>
       </ResponsiveDialog>
+      <RegisterModal
+        isRegisterOpen={isRegisterOpen}
+        setIsRegisterOpen={setIsRegisterOpen}
+      />
     </>
   );
 }

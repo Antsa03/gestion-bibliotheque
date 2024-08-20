@@ -43,10 +43,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <SessionProviderComponent>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Navbar />
-            <ReactQueryProvider>{children}</ReactQueryProvider>
-          </ThemeProvider>
+          <ReactQueryProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <Navbar />
+              {children}
+            </ThemeProvider>
+          </ReactQueryProvider>
         </SessionProviderComponent>
       </body>
     </html>

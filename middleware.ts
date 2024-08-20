@@ -19,10 +19,14 @@ export default withAuth(async function middleware(req: NextRequestWithAuth) {
     const common_paths: string[] = [
       "/api/download-file",
       "/api/read-file",
-      "/api/upload",
       "/api/change-password",
     ];
-    const auth_free_paths: string[] = ["/api/auth"];
+    const auth_free_paths: string[] = [
+      "/api/auth",
+      "/api/send-email",
+      "/api/upload",
+      "/api/register",
+    ];
 
     const { pathname } = req.nextUrl;
 
@@ -36,30 +40,23 @@ export default withAuth(async function middleware(req: NextRequestWithAuth) {
     );
 
     if (isAuthFreePath) {
-      // Allow access to auth free paths without a session
       return NextResponse.next();
     }
 
     if (token) {
-      // Redirection pour les administrateurs accédant à la racine "/"
-      if (pathname === "/" && token.role === "Administrateur") {
-        return NextResponse.redirect(new URL("/admin/dashboard", req.url));
-      }
-
       if (isAdminPath && token.role !== "Administrateur") {
         return NextResponse.rewrite(new URL("/unauthorized", req.url));
       }
       if (isAdherentPath && token.role !== "Adhérent") {
         return NextResponse.rewrite(new URL("/unauthorized", req.url));
       }
-    }
-
-    // Protected routes, require authentication
-    if (!token && !isCommonPath) {
-      return NextResponse.rewrite(new URL("/", req.url)); // Redirect to login
+    } else {
+      if (!isCommonPath) {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
     }
   } catch (error) {
-    console.error(error);
+    console.error("Middleware Error:", error);
   }
 
   return NextResponse.next();
@@ -71,6 +68,5 @@ export const config = {
     "/livres/:path*",
     "/emprunts/:path*",
     "/api/:path*",
-    "/",
   ],
 };

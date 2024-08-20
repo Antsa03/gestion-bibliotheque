@@ -1,6 +1,19 @@
+"use client";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session } = useSession(); // Get session data
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if the user is an administrator and redirect if necessary
+    if (session && session.role === "Administrateur") {
+      router.push("/admin/dashboard");
+    }
+  }, [session, router]);
   return (
     <div className="flex flex-col min-h-screen">
       <main className="min-h-[calc(100vh-57px-97px)] flex-1">

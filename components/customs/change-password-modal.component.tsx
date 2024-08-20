@@ -11,6 +11,7 @@ import { signOut, useSession } from "next-auth/react";
 import bcrypt from "bcryptjs";
 import { useUpdate } from "@/hooks/useUpdate.hook";
 import { showToast } from "@/lib/showSwal";
+import { useQueryClient } from "@tanstack/react-query";
 
 type PasswordType = {
   old_password: string;
@@ -53,10 +54,12 @@ export default function ChangePasswordModal({
   const password = watch("password");
 
   //Logique de mise à jour de mot de passe
+  const queryClient = useQueryClient();
   const change_password = useUpdate<ChangePasswordType>(
     "/api/change-password",
     () => {
       setIsChangePasswordOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast("Info", "Votre mot de passe a été changé", "success");
       signOut();
     }
