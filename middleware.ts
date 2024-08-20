@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 
 export default withAuth(async function middleware(req: NextRequestWithAuth) {
   try {
-    const token = await getToken({ req, secret: process.env.SECRET });
+    const { pathname } = req.nextUrl;
     const admin_path: string[] = [
       "/api/users",
       "/api/auteurs",
@@ -20,46 +20,38 @@ export default withAuth(async function middleware(req: NextRequestWithAuth) {
       "/api/download-file",
       "/api/read-file",
       "/api/change-password",
+      "/api/account-update",
     ];
-    const auth_free_paths: string[] = [
-      "/api/auth",
-      "/api/send-email",
-      "/api/upload",
-      "/api/register",
-    ];
-
-    const { pathname } = req.nextUrl;
 
     const isAdminPath = admin_path.some((path) => pathname.startsWith(path));
     const isAdherentPath = adherent_path.some((path) =>
       pathname.startsWith(path)
     );
     const isCommonPath = common_paths.some((path) => pathname.startsWith(path));
-    const isAuthFreePath = auth_free_paths.some((path) =>
-      pathname.startsWith(path)
-    );
 
-    if (isAuthFreePath) {
-      return NextResponse.next();
-    }
+    // Then check for token
+    const token = await getToken({ req, secret: process.env.SECRET });
 
-    if (token) {
-      if (isAdminPath && token.role !== "Administrateur") {
-        return NextResponse.rewrite(new URL("/unauthorized", req.url));
-      }
-      if (isAdherentPath && token.role !== "Adhérent") {
-        return NextResponse.rewrite(new URL("/unauthorized", req.url));
-      }
-    } else {
+    if (!token) {
       if (!isCommonPath) {
         return NextResponse.redirect(new URL("/", req.url));
       }
+    } else {
+      if (isAdminPath && token.role !== "Administrateur") {
+        console.log("Unauthorized access - Admin path");
+        return NextResponse.rewrite(new URL("/unauthorized", req.url));
+      }
+      if (isAdherentPath && token.role !== "Adhérent") {
+        console.log("Unauthorized access - Adherent path");
+        return NextResponse.rewrite(new URL("/unauthorized", req.url));
+      }
     }
+
+    return NextResponse.next();
   } catch (error) {
     console.error("Middleware Error:", error);
+    return NextResponse.next();
   }
-
-  return NextResponse.next();
 });
 
 export const config = {
@@ -67,6 +59,17 @@ export const config = {
     "/admin/:path*",
     "/livres/:path*",
     "/emprunts/:path*",
-    "/api/:path*",
+    "/api/users",
+    "/api/auteurs",
+    "/api/proprietaires",
+    "/api/livres",
+    "/api/exemplaires",
+    "/api/emprunts",
+    "/api/sanctions",
+    "/api/adherent/:path*",
+    "/api/download-file/:path*",
+    "/api/read-file/:path*",
+    "/api/change-password/:path*",
+    "/api/account-update/:path*",
   ],
 };

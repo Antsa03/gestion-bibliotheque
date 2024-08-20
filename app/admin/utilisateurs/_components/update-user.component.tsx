@@ -73,7 +73,10 @@ export default function UpdateModalUser({
 
       const result = await response.json();
       data.profile = result.profileFileName || data.profile;
+    } else {
+      data.profile = user.profile;
     }
+
     await update_user.handleUpdate(data);
   };
 

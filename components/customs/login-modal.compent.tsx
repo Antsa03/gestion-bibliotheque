@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { DialogFooter } from "../ui/dialog";
 import { signIn } from "next-auth/react";
 import RegisterModal from "./register-modal.component";
+import ResetPasswordComponent from "./reset-password.component";
 
 type Login = {
   email: string;
@@ -18,10 +19,11 @@ type Login = {
 function LoginModal() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // État pour le message d'erreur
-  //L'état du modal
+  const [errorMessage, setErrorMessage] = useState("");
+  const [resetPasswordError, setResetPasswordError] = useState("");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const { register, reset, handleSubmit } = useForm<Login>({
+
+  const { register, reset, handleSubmit, control, getValues } = useForm<Login>({
     mode: "all",
   });
 
@@ -35,9 +37,9 @@ function LoginModal() {
 
       if (res?.ok) {
         setIsLoginOpen(false);
-        setErrorMessage(""); // Réinitialiser le message d'erreur en cas de succès
+        setErrorMessage("");
       } else if (res?.error) {
-        setErrorMessage("Email ou mot de passe invalide"); // Définir le message d'erreur
+        setErrorMessage("Email ou mot de passe invalide");
       }
     } catch (error) {
       console.error(error);
@@ -46,7 +48,10 @@ function LoginModal() {
 
   const handleInputChange = () => {
     if (errorMessage) {
-      setErrorMessage(""); // Réinitialiser le message d'erreur lors de la saisie
+      setErrorMessage("");
+    }
+    if (resetPasswordError) {
+      setResetPasswordError("");
     }
   };
 
@@ -55,10 +60,26 @@ function LoginModal() {
     setIsRegisterOpen(true);
   };
 
+  // Logique du mot de passe oublié
+  const email = getValues("email");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const handleForgotPassword = () => {
+    const trimmedEmail = getValues("email")?.trim(); // Get the current value of email
+    console.log(trimmedEmail);
+
+    if (!trimmedEmail) {
+      setResetPasswordError("Veuillez entrer l'email");
+    } else {
+      setShowResetPassword(true);
+    }
+  };
+
   useEffect(() => {
     if (!isLoginOpen) {
       reset();
+      setShowResetPassword(false);
       setErrorMessage("");
+      setResetPasswordError("");
     }
   }, [isLoginOpen, reset]);
 
@@ -71,71 +92,91 @@ function LoginModal() {
         title="Authentification"
         description="Formulaire pour s'authentifier"
       >
-        <form onSubmit={handleSubmit(handleSubmitLogin)}>
-          <div className="grid gap-4 py-4">
-            {/* Email */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="email" className="text-center">
-                Email
-              </Label>
-              <Input
-                {...register("email", {
-                  required: "L'email est requis",
-                })}
-                className="col-span-3"
-                onChange={handleInputChange}
-                placeholder="exemple@mail.com"
-              />
-            </div>
-            {/* Mot de passe */}
-            <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="password" className="text-center">
-                Mot de passe
-              </Label>
-              <div className="col-span-3 relative">
+        {showResetPassword ? (
+          <ResetPasswordComponent
+            email={getValues("email")} // Pass the email value directly
+            setShowResetPassword={setShowResetPassword}
+            reset={reset}
+          />
+        ) : (
+          <form onSubmit={handleSubmit(handleSubmitLogin)}>
+            <div className="grid gap-4 py-4">
+              {/* Email */}
+              <div className="grid grid-cols-4 items-center gap-1">
+                <Label htmlFor="email" className="text-center">
+                  Email
+                </Label>
                 <Input
-                  {...register("password", {
-                    required: "Le mot de passe est requis",
+                  {...register("email", {
+                    required: "L'email est requis",
                   })}
-                  type={showPassword ? "text" : "password"}
-                  className={`col-span-3`}
+                  className="col-span-3"
                   onChange={handleInputChange}
+                  placeholder="exemple@mail.com"
                 />
-                <Button
-                  type="button"
-                  className="absolute right-0 top-0"
-                  onClick={() => setShowPassword(!showPassword)}
-                  variant="ghost"
-                >
-                  {showPassword ? <EyeOff /> : <Eye />}
-                </Button>
+              </div>
+              {/* Mot de passe */}
+              <div className="grid grid-cols-4 items-center gap-1 relative">
+                <Label htmlFor="password" className="text-center">
+                  Mot de passe
+                </Label>
+                <div className="col-span-3 relative">
+                  <Input
+                    {...register("password", {
+                      required: "Le mot de passe est requis",
+                    })}
+                    type={showPassword ? "text" : "password"}
+                    className={`col-span-3`}
+                    onChange={handleInputChange}
+                  />
+                  <Button
+                    type="button"
+                    className="absolute right-0 top-0"
+                    onClick={() => setShowPassword(!showPassword)}
+                    variant="ghost"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-          {/* Affichage du message d'erreur */}
-          {errorMessage && (
-            <p className="text-red-500 text-center mb-3">{errorMessage}</p>
-          )}
-          <DialogFooter>
-            <div className="w-full gap-4">
-              <div className="w-full px-10 py-2">
-                <Button type="submit" className="w-full">
-                  Se connecter
-                </Button>
+            {/* Affichage du message d'erreur */}
+            {errorMessage && (
+              <p className="text-red-500 text-center mb-3">{errorMessage}</p>
+            )}
+            {resetPasswordError && (
+              <p className="text-red-500 text-center mb-3">
+                {resetPasswordError}
+              </p>
+            )}
+            <DialogFooter>
+              <div className="w-full gap-4">
+                <div className="w-full px-10 gap-1">
+                  <Button
+                    onClick={handleForgotPassword}
+                    className="w-full bg-none text-blue-500"
+                    variant="link"
+                  >
+                    Mot de passe oublié?
+                  </Button>
+                  <Button type="submit" className="w-full">
+                    Se connecter
+                  </Button>
+                </div>
+                <div className="w-full flex flex-col justify-center items-center pt-4">
+                  <p>Vous n'avez pas de compte.</p>
+                  <Button
+                    onClick={openRegisterModal}
+                    className="w-full bg-none text-blue-500"
+                    variant="link"
+                  >
+                    S'inscrire maintenant
+                  </Button>
+                </div>
               </div>
-              <div className="w-full flex flex-col justify-center items-center gap-0">
-                <p>Vous n'avez pas de compte.</p>
-                <Button
-                  onClick={openRegisterModal}
-                  className="w-full bg-none text-blue-500"
-                  variant="ghost"
-                >
-                  S'inscrire maintenant
-                </Button>
-              </div>
-            </div>
-          </DialogFooter>
-        </form>
+            </DialogFooter>
+          </form>
+        )}
       </ResponsiveDialog>
       <RegisterModal
         isRegisterOpen={isRegisterOpen}

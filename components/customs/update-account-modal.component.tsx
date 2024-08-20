@@ -1,5 +1,4 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,45 +7,46 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useCreate } from "@/hooks/useCreate.hook";
-import { User as PrismaUser } from "@prisma/client";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useUpdate } from "@/hooks/useUpdate.hook";
 import { showToast } from "@/lib/showSwal";
+import { User } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
-type User = PrismaUser & {
-  confirm_password: string;
+type UpdateModalUserAccountProps = {
+  user: User;
+  isUpdateAccountOpen: boolean;
+  setIsUpdateAccountOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-type RegisterModalProps = {
-  isRegisterOpen: boolean;
-  setIsRegisterOpen: Dispatch<SetStateAction<boolean>>;
-};
-
-function RegisterModal({
-  isRegisterOpen,
-  setIsRegisterOpen,
-}: RegisterModalProps) {
+export default function UpdateModalUserAccount({
+  user,
+  isUpdateAccountOpen,
+  setIsUpdateAccountOpen,
+}: UpdateModalUserAccountProps) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-    watch,
   } = useForm<User>({
     mode: "all",
   });
 
   const queryClient = useQueryClient();
-  const create_user = useCreate<User>("/api/register", () => {
-    showToast("Information", "Votre compte à été créé avec succès", "success");
-    setIsRegisterOpen(false);
+  const update_user = useUpdate<User>("/api/account-update", () => {
+    showToast(
+      "Information",
+      "L'information de l'utilisateur a été modifié avec succès",
+      "success"
+    );
+    setIsUpdateAccountOpen(false);
     queryClient.invalidateQueries({ queryKey: ["users"] });
   });
-  const onSubmit = async (data: User) => {
+  const handleSubmitUser = async (data: User) => {
     const formData = new FormData();
     let shouldUpload = false;
 
@@ -62,30 +62,27 @@ function RegisterModal({
       });
 
       const result = await response.json();
-      data.profile = result.profileFileName || "";
+      data.profile = result.profileFileName || data.profile;
+    } else {
+      data.profile = user.profile;
     }
-    data.profile = "";
-    await create_user.handleAdd(data);
+    await update_user.handleUpdate(data);
   };
 
-  // Pour afficher/masquer le mot de passe
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm_password, setShowConfirm_password] = useState(false);
-
-  const password = watch("password");
-
   useEffect(() => {
-    reset();
-  }, [isRegisterOpen, setIsRegisterOpen]);
+    reset(user);
+  }, [user, reset]);
 
   return (
-    <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+    <Dialog open={isUpdateAccountOpen} onOpenChange={setIsUpdateAccountOpen}>
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Inscription</DialogTitle>
-          <DialogDescription>Formulaire pour s'inscrire</DialogDescription>
+          <DialogTitle className="text-center">Espace compte</DialogTitle>
+          <DialogDescription>
+            Formulaire pour modifier vos informations
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleSubmitUser)}>
           <div className="grid gap-4 py-4">
             {/* Profile */}
             <div className="grid grid-cols-4 items-center gap-1">
@@ -115,8 +112,7 @@ function RegisterModal({
                 </p>
               )}
             </div>
-
-            {/* Prénom */}
+            {/* Prénom(s) */}
             <div className="grid grid-cols-4 items-center gap-1">
               <Label htmlFor="firstname" className="text-center">
                 Prénom
@@ -133,7 +129,6 @@ function RegisterModal({
                 </p>
               )}
             </div>
-
             {/* Adresse */}
             <div className="grid grid-cols-4 items-center gap-1">
               <Label htmlFor="address" className="text-center">
@@ -151,7 +146,6 @@ function RegisterModal({
                 </p>
               )}
             </div>
-
             {/* Téléphone */}
             <div className="grid grid-cols-4 items-center gap-1">
               <Label htmlFor="address" className="text-center">
@@ -174,7 +168,6 @@ function RegisterModal({
                 </p>
               )}
             </div>
-
             {/* Email */}
             <div className="grid grid-cols-4 items-center gap-1">
               <Label htmlFor="email" className="text-center">
@@ -196,76 +189,6 @@ function RegisterModal({
                 </p>
               )}
             </div>
-
-            {/* Mot de passe */}
-            <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="password" className="text-center">
-                Mot de passe
-              </Label>
-              <div className="col-span-3 relative">
-                <Input
-                  {...register("password", {
-                    required: "Mot de passe est requis",
-                    minLength: {
-                      value: 8,
-                      message:
-                        "Le mot de passe doit comporter au moins 08 caractères",
-                    },
-                  })}
-                  type={showPassword ? "text" : "password"}
-                  className={`w-full ${
-                    errors.password ? "border-red-600" : ""
-                  }`}
-                />
-                <Button
-                  type="button"
-                  className="absolute right-0 top-0"
-                  onClick={() => setShowPassword(!showPassword)}
-                  variant="ghost"
-                >
-                  {showPassword ? <EyeOff /> : <Eye />}
-                </Button>
-              </div>
-              {errors.password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirmation Mot de passe */}
-            <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="confirm_password" className="text-center">
-                Confirmation Mot de passe
-              </Label>
-              <div className="col-span-3 relative">
-                <Input
-                  {...register("confirm_password", {
-                    required: "Confirmation de mot de passe est requise",
-                    validate: (value) =>
-                      value === password ||
-                      "Les mots de passe ne correspondent pas",
-                  })}
-                  type={showConfirm_password ? "text" : "password"}
-                  className={`w-full ${
-                    errors.confirm_password ? "border-red-600" : ""
-                  }`}
-                />
-                <Button
-                  type="button"
-                  className="absolute right-0 top-0"
-                  onClick={() => setShowConfirm_password(!showConfirm_password)}
-                  variant="ghost"
-                >
-                  {showConfirm_password ? <EyeOff /> : <Eye />}
-                </Button>
-              </div>
-              {errors.confirm_password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.confirm_password.message}
-                </p>
-              )}
-            </div>
           </div>
           <DialogFooter>
             <Button type="submit" className="w-[90px]">
@@ -275,7 +198,7 @@ function RegisterModal({
               type="button"
               variant="secondary"
               onClick={() => {
-                setIsRegisterOpen(false);
+                setIsUpdateAccountOpen(false);
               }}
             >
               Annuler
@@ -286,5 +209,3 @@ function RegisterModal({
     </Dialog>
   );
 }
-
-export default RegisterModal;

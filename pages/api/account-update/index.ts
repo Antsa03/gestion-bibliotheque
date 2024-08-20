@@ -52,7 +52,6 @@ export default async function handler(
         firstname: capitalizeWords(user.firstname),
         address: user.address,
         phone: user.phone,
-        role: user.role,
         email: user.email,
       },
     });

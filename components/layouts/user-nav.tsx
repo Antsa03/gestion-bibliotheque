@@ -23,11 +23,15 @@ import { IMG_PROFILE_URL } from "@/constants/img-profile-url.constant";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import ChangePasswordModal from "@/components/customs/change-password-modal.component";
+import UpdateModalUserAccount from "../customs/update-account-modal.component";
+import { User as PrismaUser } from "@prisma/client";
 
 export function UserNav() {
   const { data: session } = useSession();
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  console.log("UserNav rendu");
+  //L'état du modal compte
+  const [isUpdateAccountOpen, setIsUpdateAccountOpen] = useState(false);
+
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -58,6 +62,11 @@ export function UserNav() {
         isChangePasswordOpen={isChangePasswordOpen}
         setIsChangePasswordOpen={setIsChangePasswordOpen}
       />
+      <UpdateModalUserAccount
+        user={session as PrismaUser}
+        isUpdateAccountOpen={isUpdateAccountOpen}
+        setIsUpdateAccountOpen={setIsUpdateAccountOpen}
+      />
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
@@ -78,11 +87,12 @@ export function UserNav() {
             <RectangleEllipsis className="w-4 h-4 mr-3 text-muted-foreground" />
             Changer de mot de passe
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link href="/account" className="flex items-center">
-              <User className="w-4 h-4 mr-3 text-muted-foreground" />
-              Compte
-            </Link>
+          <DropdownMenuItem
+            className="hover:cursor-pointer flex items-center"
+            onClick={() => setIsUpdateAccountOpen(true)}
+          >
+            <User className="w-4 h-4 mr-3 text-muted-foreground" />
+            Compte
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

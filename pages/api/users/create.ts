@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma-client";
 import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import bcryptjs from "bcryptjs";
+import { capitalizeWords } from "@/lib/capitalize-word";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +16,7 @@ export default async function handler(
       data: {
         profile: user.profile === "" ? "user.png" : user.profile,
         name: user.name.toUpperCase(),
-        firstname: user.firstname,
+        firstname: capitalizeWords(user.firstname),
         address: user.address,
         phone: user.phone,
         role: user.role,

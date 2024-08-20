@@ -10,11 +10,11 @@ export default async function handler(
 
   // Spécifier les options SMTP avec le type SMTPTransport.Options
   const transporter = nodemailer.createTransport({
-    host: process.env.MAILER_SERVICE,
-    port: parseInt(process.env.MAILER_PORT || "587"), // Convertir la chaîne en nombre
+    host: "smtp.ethereal.email",
+    port: 587,
     auth: {
-      user: process.env.MAILER_LOGIN,
-      pass: process.env.MAILER_PASSWORD,
+      user: "emelia.shanahan@ethereal.email",
+      pass: "FcC2rVKkKCVzvqVkr1",
     },
   } as SMTPTransport.Options);
 

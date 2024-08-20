@@ -10,17 +10,17 @@ export default async function handler(
 
   // Spécifier les options SMTP avec le type SMTPTransport.Options
   const transporter = nodemailer.createTransport({
-    host: process.env.MAILER_SERVICE,
-    port: parseInt(process.env.MAILER_PORT || "587"), // Convertir la chaîne en nombre
+    host: "smtp.gmail.com",
+    port: 465,
     auth: {
-      user: process.env.MAILER_LOGIN,
-      pass: process.env.MAILER_PASSWORD,
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
     },
   } as SMTPTransport.Options);
 
   try {
     await transporter.sendMail({
-      from: process.env.MAILER_LOGIN,
+      from: process.env.GMAIL_USER,
       to: email,
       subject: subject,
       html: `
