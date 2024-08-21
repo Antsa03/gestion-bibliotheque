@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import AddModalAuteur from "./_components/add-modal-auteur.component";
 import { AuteurDataTable } from "./_components/auteur-data-table.component";
+import { HashLoader } from "react-spinners";
 
 function AuteurPage() {
   const auteur_data = useFetchData<Auteur[]>("/api/auteurs");
@@ -52,7 +53,7 @@ function AuteurPage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

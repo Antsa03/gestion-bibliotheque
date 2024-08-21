@@ -1,13 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -23,8 +16,20 @@ import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Eye, EyeOff } from "lucide-react";
 import { showToast } from "@/lib/showSwal";
+import {
+  CirclePlus,
+  Eye,
+  EyeOff,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Lock,
+  UserCog,
+} from "lucide-react";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import ActionLoading from "@/components/action-loading.component";
 
 type User = PrismaUser & {
   confirm_password: string;
@@ -89,253 +94,287 @@ function AddUserComponent() {
   }, [isAddOpen, setIsAddOpen]);
 
   return (
-    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+    <>
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouvel utilisateur
       </Button>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Ajout de nouvel utilisateur</DialogTitle>
-          <DialogDescription>
-            Formulaire pour ajouter de nouvel utilisateur
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-4 py-4">
-            {/* Profile */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="profile" className="text-center">
-                Profile
-              </Label>
-              <Input
-                {...register("profile")}
-                className="col-span-3"
-                type="file"
-              />
-            </div>
-            {/* Nom */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="name" className="text-center">
-                Nom
-              </Label>
-              <Input
-                {...register("name", {
-                  required: "Nom est requis",
-                })}
-                className={`col-span-3 ${errors.name ? "border-red-600" : ""}`}
-              />
-              {errors.name && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
+      <ResponsiveDialog
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
+        title="Ajout de nouvel utilisateur"
+        description="Formulaire pour ajouter de nouvel utilisateur"
+      >
+        {create_user.isAdding ? (
+          <ActionLoading text="En cours d'enregistrement" />
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="profile">Photo de profil</Label>
+                <Input
+                  {...register("profile")}
+                  type="file"
+                  className="h-fit file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+              </div>
 
-            {/* Prénom */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="firstname" className="text-center">
-                Prénom
-              </Label>
-              <Input
-                {...register("firstname", { required: "Prénom est requis" })}
-                className={`col-span-3 ${
-                  errors.firstname ? "border-red-600" : ""
-                }`}
-              />
-              {errors.firstname && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.firstname.message}
-                </p>
-              )}
-            </div>
-
-            {/* Adresse */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
-                Adresse
-              </Label>
-              <Input
-                {...register("address", { required: "Adresse est requise" })}
-                className={`col-span-3 ${
-                  errors.address ? "border-red-600" : ""
-                }`}
-              />
-              {errors.address && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.address.message}
-                </p>
-              )}
-            </div>
-
-            {/* Téléphone */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
-                Téléphone
-              </Label>
-              <Input
-                {...register("phone", {
-                  required: "Téléphone est requis",
-                  maxLength: {
-                    value: 12,
-                    message:
-                      "Le numéro de téléphone doit comporter au maximum 12 caractères",
-                  },
-                })}
-                className={`col-span-3 ${errors.phone ? "border-red-600" : ""}`}
-              />
-              {errors.phone && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.phone.message}
-                </p>
-              )}
-            </div>
-
-            {/* Rôle */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="role" className="text-center">
-                Rôle
-              </Label>
-              <Controller
-                name="role"
-                control={control}
-                rules={{ required: "Rôle est requis" }}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
-                      <SelectValue placeholder="Sélectionnez le rôle de l'utilisateur" />
-                    </SelectTrigger>
-                    <SelectContent
-                      className={`col-span-3 ${
-                        errors.role ? "border-red-600" : ""
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  {/* Nom */}
+                  <Label htmlFor="name">Nom</Label>
+                  <div className="relative">
+                    <User
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      size={18}
+                    />
+                    <Input
+                      {...register("name", { required: "Nom requis" })}
+                      className={`pl-10 ${errors.name ? "border-red-500" : ""}`}
+                      placeholder="Votre nom"
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="text-red-500 text-sm">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+                {/* Prénom(s) */}
+                <div className="space-y-2">
+                  <Label htmlFor="firstname">Prénom(s)</Label>
+                  <div className="relative">
+                    <User
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      size={18}
+                    />
+                    <Input
+                      {...register("firstname", { required: "Prénom requis" })}
+                      className={`pl-10 ${
+                        errors.firstname ? "border-red-500" : ""
                       }`}
-                    >
-                      <SelectGroup>
-                        <SelectLabel>Rôle de l'utilisateur</SelectLabel>
-                        <SelectItem value="Administrateur">
-                          Administrateur
-                        </SelectItem>
-                        <SelectItem value="Adhérent">Adhérent</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                      placeholder="Votre prénom"
+                    />
+                  </div>
+                  {errors.firstname && (
+                    <p className="text-red-500 text-sm">
+                      {errors.firstname.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {/* Rôle */}
+              <div className="space-y-2">
+                <Label htmlFor="role">Rôle</Label>
+                <div className="relative">
+                  <UserCog
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Controller
+                    name="role"
+                    control={control}
+                    rules={{ required: "Rôle est requis" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          className={`pl-10 border rounded-md p-1 shadow-sm ${
+                            errors.role ? "border-red-600" : ""
+                          }`}
+                        >
+                          <span className="pl-10">
+                            <SelectValue placeholder="Sélectionnez le rôle de l'utilisateur" />
+                          </span>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Rôle de l'utilisateur</SelectLabel>
+                            <SelectItem value="Administrateur">
+                              Administrateur
+                            </SelectItem>
+                            <SelectItem value="Adhérent">Adhérent</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+                {errors.role && (
+                  <p className="text-red-500 text-sm">{errors.role.message}</p>
                 )}
-              />
-              {errors.role && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.role.message}
-                </p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="email" className="text-center">
-                Email
-              </Label>
-              <Input
-                {...register("email", {
-                  required: "Email est requis",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Email invalide",
-                  },
-                })}
-                className={`col-span-3 ${errors.email ? "border-red-600" : ""}`}
-              />
-              {errors.email && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            {/* Mot de passe */}
-            <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="password" className="text-center">
-                Mot de passe
-              </Label>
-              <div className="col-span-3 relative">
-                <Input
-                  {...register("password", {
-                    required: "Mot de passe est requis",
-                    minLength: {
-                      value: 8,
-                      message:
-                        "Le mot de passe doit comporter au moins 08 caractères",
-                    },
-                  })}
-                  type={showPassword ? "text" : "password"}
-                  className={`w-full ${
-                    errors.password ? "border-red-600" : ""
-                  }`}
-                />
-                <Button
-                  type="button"
-                  className="absolute right-0 top-0"
-                  onClick={() => setShowPassword(!showPassword)}
-                  variant="ghost"
-                >
-                  {showPassword ? <EyeOff /> : <Eye />}
-                </Button>
               </div>
-              {errors.password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirmation Mot de passe */}
-            <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="confirm_password" className="text-center">
-                Confirmation Mot de passe
-              </Label>
-              <div className="col-span-3 relative">
-                <Input
-                  {...register("confirm_password", {
-                    required: "Confirmation de mot de passe est requise",
-                    validate: (value) =>
-                      value === password ||
-                      "Les mots de passe ne correspondent pas",
-                  })}
-                  type={showConfirm_password ? "text" : "password"}
-                  className={`w-full ${
-                    errors.confirm_password ? "border-red-600" : ""
-                  }`}
-                />
-                <Button
-                  type="button"
-                  className="absolute right-0 top-0"
-                  onClick={() => setShowConfirm_password(!showConfirm_password)}
-                  variant="ghost"
-                >
-                  {showConfirm_password ? <EyeOff /> : <Eye />}
-                </Button>
+              {/* Adresse */}
+              <div className="space-y-2">
+                <Label htmlFor="address">Adresse</Label>
+                <div className="relative">
+                  <MapPin
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("address", { required: "Adresse requise" })}
+                    className={`pl-10 ${
+                      errors.address ? "border-red-500" : ""
+                    }`}
+                    placeholder="Votre adresse"
+                  />
+                </div>
+                {errors.address && (
+                  <p className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </p>
+                )}
               </div>
-              {errors.confirm_password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.confirm_password.message}
-                </p>
-              )}
+              {/* Téléphone */}
+              <div className="space-y-2">
+                <Label htmlFor="phone">Téléphone</Label>
+                <div className="relative">
+                  <Phone
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("phone", {
+                      required: "Téléphone requis",
+                      maxLength: {
+                        value: 12,
+                        message: "12 caractères maximum",
+                      },
+                    })}
+                    className={`pl-10 ${errors.phone ? "border-red-500" : ""}`}
+                    placeholder="Votre numéro de téléphone"
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                )}
+              </div>
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("email", {
+                      required: "Email requis",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                        message: "Email invalide",
+                      },
+                    })}
+                    className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                    placeholder="votre@email.com"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+              </div>
+              {/* Mot de passe */}
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <div className="relative">
+                  <Lock
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("password", {
+                      required: "Mot de passe requis",
+                      minLength: { value: 8, message: "8 caractères minimum" },
+                    })}
+                    type={showPassword ? "text" : "password"}
+                    className={`pl-10 ${
+                      errors.password ? "border-red-500" : ""
+                    }`}
+                    placeholder="Votre mot de passe"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              {/* Confirmation mot de passe */}
+              <div className="space-y-2">
+                <Label htmlFor="confirm_password">
+                  Confirmation du mot de passe
+                </Label>
+                <div className="relative">
+                  <Lock
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("confirm_password", {
+                      required: "Confirmation requise",
+                      validate: (value) =>
+                        value === password ||
+                        "Les mots de passe ne correspondent pas",
+                    })}
+                    type={showConfirm_password ? "text" : "password"}
+                    className={`pl-10 ${
+                      errors.confirm_password ? "border-red-500" : ""
+                    }`}
+                    placeholder="Confirmez votre mot de passe"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                    onClick={() =>
+                      setShowConfirm_password(!showConfirm_password)
+                    }
+                  >
+                    {showConfirm_password ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </Button>
+                </div>
+                {errors.confirm_password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.confirm_password.message}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setIsAddOpen(false);
-              }}
-            >
-              Annuler
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className="gap-2">
+              <Button type="submit" className="min-w-[90px]">
+                Ok
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setIsAddOpen(false);
+                }}
+              >
+                Annuler
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
+      </ResponsiveDialog>
+    </>
   );
 }
 

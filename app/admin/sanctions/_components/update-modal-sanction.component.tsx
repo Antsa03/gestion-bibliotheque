@@ -27,6 +27,9 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useFetchData } from "@/hooks/useFetchData.hook";
 import { addDays, isEqual } from "date-fns";
 import { DatePicker } from "@/components/ui/date-picker";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import ActionLoading from "@/components/action-loading.component";
+import { InfoIcon, UserIcon } from "lucide-react";
 
 type UpdateModalSanction = {
   sanction: Sanction;
@@ -95,138 +98,153 @@ export default function UpdateModalSanction({
   }, [sanction, reset]);
 
   return (
-    <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modification de la sanction</DialogTitle>
-          <DialogDescription>
-            Formulaire pour modifier la sanction
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitSanction)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="user_id" className="text-center">
-                Adhérent
-              </Label>
-              <Controller
-                name="user_id"
-                control={control}
-                rules={{ required: "Adhérent est requis" }}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value?.toString()}
-                  >
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
-                      <SelectValue placeholder="Sélectionnez l'adhérent" />
-                    </SelectTrigger>
-                    <SelectContent
-                      className={`col-span-3 ${
-                        errors.user_id ? "border-red-600" : ""
-                      }`}
+    <ResponsiveDialog
+      isOpen={isEditOpen}
+      setIsOpen={setIsEditOpen}
+      title="Modification de sanction"
+      description="Formulaire pour modifier une sanction"
+    >
+      {update_sanction.isUpdating ? (
+        <ActionLoading text="En cours de modification ..." />
+      ) : (
+        <form
+          onSubmit={handleSubmit(handleSubmitSanction)}
+          className="space-y-6"
+        >
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="user_id">Adhérent</Label>
+              <div className="relative">
+                <UserIcon
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <Controller
+                  name="user_id"
+                  control={control}
+                  rules={{ required: "Adhérent est requis" }}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value?.toString()}
                     >
-                      <SelectGroup>
-                        <SelectLabel>Liste des adhérents</SelectLabel>
-                        {users
-                          ?.filter((user) => user.role === "Adhérent")
-                          .map((user) => (
-                            <SelectItem
-                              key={user.user_id}
-                              value={user.user_id.toString()}
-                            >
-                              {user.email +
-                                ": " +
-                                user.name +
-                                " " +
-                                user.firstname}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+                      <SelectTrigger
+                        className={`border rounded-md p-1 shadow-sm ${
+                          errors.user_id ? "border-red-600" : ""
+                        }`}
+                      >
+                        <span className="pl-10">
+                          <SelectValue placeholder="Sélectionnez l'adhérent" />
+                        </span>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-56">
+                        <SelectGroup>
+                          <SelectLabel>Liste des adhérents</SelectLabel>
+                          {users
+                            ?.filter((user) => user.role === "Adhérent")
+                            .map((user) => (
+                              <SelectItem
+                                key={user.user_id}
+                                value={user.user_id.toString()}
+                              >
+                                {user.email +
+                                  ": " +
+                                  user.name +
+                                  " " +
+                                  user.firstname}
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+
               {errors.user_id && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.user_id.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.user_id.message}</p>
               )}
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_deb" className="text-center">
-                Date de début
-              </Label>
-              <Controller
-                name="sanction_deb"
-                control={control}
-                rules={{ required: "La date de début est requise" }}
-                render={({ field }) => (
-                  <DatePicker
-                    selectedDate={field.value}
-                    onSelect={field.onChange}
-                    placeholder="Sélectionner une date"
-                    className={`col-span-3 ${
-                      errors.sanction_deb ? "border-red-600" : ""
-                    }`}
-                  />
-                )}
-              />
+            <div className="space-y-2">
+              <Label htmlFor="sanction_deb">Date d'emprunt</Label>
+              <div className="relative">
+                <Controller
+                  name="sanction_deb"
+                  control={control}
+                  rules={{ required: "La date d'emprunt est requise" }}
+                  render={({ field }) => (
+                    <DatePicker
+                      selectedDate={field.value}
+                      onSelect={field.onChange}
+                      placeholder="Sélectionner une date"
+                      className={`w-full ${
+                        errors.sanction_deb ? "border-red-600" : ""
+                      }`}
+                    />
+                  )}
+                />
+              </div>
               {errors.sanction_deb && (
-                <p className="text-red-600 text-center col-span-4">
+                <p className="text-red-500 text-sm">
                   {errors.sanction_deb.message}
                 </p>
               )}
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_fin" className="text-center">
-                Date de fin
-              </Label>
-              <Controller
-                name="sanction_fin"
-                control={control}
-                rules={{ required: "La date de fin est requise" }}
-                render={({ field }) => (
-                  <DatePicker
-                    selectedDate={field.value}
-                    onSelect={field.onChange}
-                    placeholder="Sélectionner une date"
-                    className={`col-span-3 ${
-                      errors.sanction_fin ? "border-red-600" : ""
-                    }`}
-                  />
-                )}
-              />
+            <div className="space-y-2">
+              <Label htmlFor="sanction_fin">Date de retour prévue</Label>
+              <div className="relative">
+                <Controller
+                  name="sanction_fin"
+                  control={control}
+                  rules={{ required: "La date de retour prévue est requise" }}
+                  render={({ field }) => (
+                    <DatePicker
+                      selectedDate={field.value}
+                      onSelect={field.onChange}
+                      placeholder="Sélectionner une date"
+                      className={`w-full ${
+                        errors.sanction_fin ? "border-red-600" : ""
+                      }`}
+                    />
+                  )}
+                />
+              </div>
               {errors.sanction_fin && (
-                <p className="text-red-600 text-center col-span-4">
+                <p className="text-red-500 text-sm">
                   {errors.sanction_fin.message}
                 </p>
               )}
             </div>
+          </div>
 
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_motif" className="text-center">
-                Motif
-              </Label>
+          <div className="space-y-2">
+            <Label htmlFor="sanction_motif">Motif</Label>
+            <div className="relative">
+              <InfoIcon
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <Input
                 {...register("sanction_motif", {
                   required: "Le motif est requis",
                 })}
-                className={`col-span-3 ${
+                className={`pl-10 ${
                   errors.sanction_motif ? "border-red-600" : ""
                 }`}
               />
-              {errors.sanction_motif && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.sanction_motif.message}
-                </p>
-              )}
             </div>
+
+            {errors.sanction_motif && (
+              <p className="text-red-500 text-sm">
+                {errors.sanction_motif.message}
+              </p>
+            )}
           </div>
-          <DialogFooter>
-            <Button type="submit" className="w-[90px]">
+
+          <DialogFooter className="gap-2">
+            <Button type="submit" className="min-w-[90px]">
               Ok
             </Button>
             <Button
@@ -240,7 +258,7 @@ export default function UpdateModalSanction({
             </Button>
           </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      )}
+    </ResponsiveDialog>
   );
 }

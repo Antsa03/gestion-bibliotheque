@@ -1,3 +1,5 @@
+import ActionLoading from "@/components/action-loading.component";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +15,7 @@ import { useUpdate } from "@/hooks/useUpdate.hook";
 import { showToast } from "@/lib/showSwal";
 import { Auteur } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { UserRoundPen } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -53,49 +56,57 @@ export default function UpdateModalAuteur({
   }, [auteur, reset]);
 
   return (
-    <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modification de l'auteur</DialogTitle>
-          <DialogDescription>
-            Formulaire pour modifier l'auteur
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitAuteur)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="auteur_nom" className="text-center">
-                Nom de l'auteur
-              </Label>
-              <Input
-                {...register("auteur_nom", {
-                  required: "Le nom d'auteur est requis",
-                })}
-                className={`col-span-3 ${
-                  errors.auteur_nom ? "border-red-600" : ""
-                }`}
-              />
+    <ResponsiveDialog
+      isOpen={isEditOpen}
+      setIsOpen={setIsEditOpen}
+      title="Modification de l'auteur"
+      description="Formulaire pour modifier l'auteur"
+    >
+      {update_auteur.isUpdating ? (
+        <ActionLoading text="En cours de modification ..." />
+      ) : (
+        <form onSubmit={handleSubmit(handleSubmitAuteur)} className="space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="auteur_nom">Nom de l'auteur</Label>
+              <div className="relative">
+                <UserRoundPen
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <Input
+                  {...register("auteur_nom", {
+                    required: "Nom de l'auteur requis",
+                  })}
+                  className={`pl-10 ${
+                    errors.auteur_nom ? "border-red-500" : ""
+                  }`}
+                  placeholder="nom ..."
+                />
+              </div>
               {errors.auteur_nom && (
-                <p className="text-red-600 text-center col-span-4">
+                <p className="text-red-500 text-sm">
                   {errors.auteur_nom.message}
                 </p>
               )}
             </div>
           </div>
-          <DialogFooter>
-            <Button type="submit" className="w-[90px]">
+          <DialogFooter className="gap-2">
+            <Button type="submit" className="min-w-[90px]">
               Ok
             </Button>
             <Button
               type="button"
               variant="secondary"
-              onClick={() => setIsEditOpen(false)}
+              onClick={() => {
+                setIsEditOpen(false);
+              }}
             >
               Annuler
             </Button>
           </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      )}
+    </ResponsiveDialog>
   );
 }

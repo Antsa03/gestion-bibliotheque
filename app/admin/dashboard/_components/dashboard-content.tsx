@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useFetchData } from "@/hooks/useFetchData.hook";
 import { BookCopy, CircleSlash, ScanQrCodeIcon, User2 } from "lucide-react";
 import DashoardType from "@/types/dashboard.type";
+import { HashLoader } from "react-spinners";
 
 export default function DashboardContent() {
   const dashboard_data = useFetchData<DashoardType>("/api/dashboard");
@@ -43,7 +44,7 @@ export default function DashboardContent() {
       {error && <div>{error.message}</div>}
       {isLoading ? (
         <div className="w-full h-[345px] flex items-center justify-center">
-          Chargement ...
+          <HashLoader />
         </div>
       ) : (
         <ScrollArea className="h-full">

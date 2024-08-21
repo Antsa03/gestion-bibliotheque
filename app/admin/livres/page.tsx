@@ -39,6 +39,7 @@ import {
 import UpdateModalLivre from "./_components/update-modal-livres.component";
 import { saveAs } from "file-saver";
 import { Input } from "@/components/ui/input";
+import { HashLoader } from "react-spinners";
 
 type Livre = PrismaLivre & {
   auteur: Auteur;
@@ -135,7 +136,7 @@ function LivresPage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

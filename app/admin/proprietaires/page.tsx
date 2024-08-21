@@ -16,6 +16,7 @@ import Link from "next/link";
 import { ProprietaireDataTable } from "./_components/proprietaire-data-table.component";
 import AddModalProprietaire from "./_components/add-modal-proprietaire.component";
 import { ContentLayout } from "@/components/layouts/admin-panel/content-layout";
+import { HashLoader } from "react-spinners";
 
 function ProprietairePage() {
   const proprietaire_data = useFetchData<Proprietaire[]>("/api/proprietaires");
@@ -52,7 +53,7 @@ function ProprietairePage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

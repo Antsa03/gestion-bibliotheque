@@ -21,6 +21,7 @@ import {
   Livre,
 } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import { HashLoader } from "react-spinners";
 
 type Exemplaire = PrismaExemplaire & {
   livre: Livre;
@@ -64,7 +65,7 @@ function EmpruntPage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

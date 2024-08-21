@@ -27,7 +27,7 @@ export function Navbar() {
                   "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] "
                 )}
               >
-                Bibliothèque
+                BiblioTech
               </h1>
             </Link>
             {session && (

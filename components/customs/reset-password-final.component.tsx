@@ -39,7 +39,7 @@ export default function ResetPasswordFinal({
   };
 
   return (
-    <div className="p-4">
+    <div className="w-full p-4">
       <form onSubmit={handleFormSubmit(onSubmit)} className="space-y-4">
         {/* Nouveau mot de passe */}
         <div className="relative">
@@ -58,7 +58,7 @@ export default function ResetPasswordFinal({
           <Button
             type="button"
             variant="ghost"
-            className="absolute right-2 top-8"
+            className="absolute right-0 top-7"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOff /> : <Eye />}
@@ -89,7 +89,7 @@ export default function ResetPasswordFinal({
           <Button
             type="button"
             variant="ghost"
-            className="absolute right-2 top-8"
+            className="absolute right-0 top-7"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
             {showConfirmPassword ? <EyeOff /> : <Eye />}

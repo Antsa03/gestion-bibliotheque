@@ -16,6 +16,7 @@ import { SanctionDataTable } from "./_components/sanction-data-table.component";
 import { useFetchData } from "@/hooks/useFetchData.hook";
 import { Sanction as PrismaSanction, User } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import { HashLoader } from "react-spinners";
 
 type Sanction = PrismaSanction & {
   user: User;
@@ -56,7 +57,7 @@ function SanctionsPage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

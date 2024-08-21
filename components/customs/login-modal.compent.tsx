@@ -1,15 +1,16 @@
 "use client";
+"use client";
 import React, { useEffect, useState } from "react";
 import { ResponsiveDialog } from "../responsive-dialog";
 import { Button } from "../ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Eye, EyeOff } from "lucide-react";
-import { DialogFooter } from "../ui/dialog";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { signIn } from "next-auth/react";
 import RegisterModal from "./register-modal.component";
 import ResetPasswordComponent from "./reset-password.component";
+import { Separator } from "../ui/separator";
 
 type Login = {
   email: string;
@@ -23,7 +24,7 @@ function LoginModal() {
   const [resetPasswordError, setResetPasswordError] = useState("");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
-  const { register, reset, handleSubmit, control, getValues } = useForm<Login>({
+  const { register, reset, handleSubmit, getValues } = useForm<Login>({
     mode: "all",
   });
 
@@ -61,11 +62,9 @@ function LoginModal() {
   };
 
   // Logique du mot de passe oublié
-  const email = getValues("email");
   const [showResetPassword, setShowResetPassword] = useState(false);
   const handleForgotPassword = () => {
     const trimmedEmail = getValues("email")?.trim(); // Get the current value of email
-    console.log(trimmedEmail);
 
     if (!trimmedEmail) {
       setResetPasswordError("Veuillez entrer l'email");
@@ -85,96 +84,113 @@ function LoginModal() {
 
   return (
     <>
-      <Button onClick={() => setIsLoginOpen(true)}>Se connecter</Button>
+      <Button onClick={() => setIsLoginOpen(true)} variant="outline">
+        Se connecter
+      </Button>
       <ResponsiveDialog
         isOpen={isLoginOpen}
         setIsOpen={setIsLoginOpen}
-        title="Authentification"
-        description="Formulaire pour s'authentifier"
+        title={`${showResetPassword ? "Mot de passe oublié?" : "Bienvenue"}`}
+        description={`${
+          showResetPassword
+            ? "Réinitialisez votre mot de passe"
+            : "Connectez-vous à votre compte"
+        }`}
       >
         {showResetPassword ? (
           <ResetPasswordComponent
-            email={getValues("email")} // Pass the email value directly
+            email={getValues("email")}
             setShowResetPassword={setShowResetPassword}
             reset={reset}
           />
         ) : (
-          <form onSubmit={handleSubmit(handleSubmitLogin)}>
-            <div className="grid gap-4 py-4">
+          <form
+            onSubmit={handleSubmit(handleSubmitLogin)}
+            className="space-y-6"
+          >
+            <div className="space-y-4">
               {/* Email */}
-              <div className="grid grid-cols-4 items-center gap-1">
-                <Label htmlFor="email" className="text-center">
-                  Email
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  Adresse e-mail
                 </Label>
-                <Input
-                  {...register("email", {
-                    required: "L'email est requis",
-                  })}
-                  className="col-span-3"
-                  onChange={handleInputChange}
-                  placeholder="exemple@mail.com"
-                />
+                <div className="relative">
+                  <Mail
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("email", { required: "L'email est requis" })}
+                    className="pl-10"
+                    placeholder="exemple@mail.com"
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
               {/* Mot de passe */}
-              <div className="grid grid-cols-4 items-center gap-1 relative">
-                <Label htmlFor="password" className="text-center">
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">
                   Mot de passe
                 </Label>
-                <div className="col-span-3 relative">
+                <div className="relative">
+                  <Lock
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
                   <Input
                     {...register("password", {
                       required: "Le mot de passe est requis",
                     })}
                     type={showPassword ? "text" : "password"}
-                    className={`col-span-3`}
+                    className="pl-10"
                     onChange={handleInputChange}
                   />
                   <Button
                     type="button"
-                    className="absolute right-0 top-0"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
                     onClick={() => setShowPassword(!showPassword)}
                     variant="ghost"
+                    size="sm"
                   >
-                    {showPassword ? <EyeOff /> : <Eye />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </Button>
                 </div>
               </div>
             </div>
-            {/* Affichage du message d'erreur */}
-            {errorMessage && (
-              <p className="text-red-500 text-center mb-3">{errorMessage}</p>
-            )}
-            {resetPasswordError && (
-              <p className="text-red-500 text-center mb-3">
-                {resetPasswordError}
+
+            {/* Affichage des messages d'erreur */}
+            {(errorMessage || resetPasswordError) && (
+              <p className="text-red-500 text-sm text-center">
+                {errorMessage || resetPasswordError}
               </p>
             )}
-            <DialogFooter>
-              <div className="w-full gap-4">
-                <div className="w-full px-10 gap-1">
-                  <Button
-                    onClick={handleForgotPassword}
-                    className="w-full bg-none text-blue-500"
-                    variant="link"
-                  >
-                    Mot de passe oublié?
-                  </Button>
-                  <Button type="submit" className="w-full">
-                    Se connecter
-                  </Button>
-                </div>
-                <div className="w-full flex flex-col justify-center items-center pt-4">
-                  <p>Vous n'avez pas de compte.</p>
-                  <Button
-                    onClick={openRegisterModal}
-                    className="w-full bg-none text-blue-500"
-                    variant="link"
-                  >
-                    S'inscrire maintenant
-                  </Button>
-                </div>
-              </div>
-            </DialogFooter>
+
+            <Button type="submit" className="w-full">
+              Se connecter
+            </Button>
+
+            <Button
+              onClick={handleForgotPassword}
+              className="w-full"
+              variant="link"
+            >
+              Mot de passe oublié ?
+            </Button>
+
+            <Separator />
+
+            <div className="text-center space-y-2">
+              <p className="text-sm text-gray-600">
+                Vous n'avez pas de compte ?
+              </p>
+              <Button
+                onClick={openRegisterModal}
+                className="w-full"
+                variant="outline"
+              >
+                S'inscrire maintenant
+              </Button>
+            </div>
           </form>
         )}
       </ResponsiveDialog>

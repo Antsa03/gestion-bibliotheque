@@ -93,7 +93,7 @@ function ResetPasswordComponent({
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
+    <div className="w-full  flex flex-col items-center gap-4 p-4">
       <p className="text-sm sm:text-lg text-center text-blue-700">
         Votre email :
       </p>

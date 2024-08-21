@@ -23,12 +23,14 @@ import { useFetchData } from "@/hooks/useFetchData.hook";
 import { showToast } from "@/lib/showSwal";
 import { Sanction, User } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, InfoIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { addDays } from "date-fns";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import ActionLoading from "@/components/action-loading.component";
 
 export default function AddModalSanction() {
   const {
@@ -77,155 +79,174 @@ export default function AddModalSanction() {
   }, [isAddOpen, setIsAddOpen]);
 
   return (
-    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+    <>
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter une nouvelle sanction
       </Button>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Ajout de nouvelle sanction</DialogTitle>
-          <DialogDescription>
-            Formulaire pour ajouter une nouvelle sanction
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitSanction)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="user_id" className="text-center">
-                Adhérent
-              </Label>
-              <Controller
-                name="user_id"
-                control={control}
-                rules={{ required: "Adhérent est requis" }}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value?.toString()}
-                  >
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
-                      <SelectValue placeholder="Sélectionnez l'adhérent" />
-                    </SelectTrigger>
-                    <SelectContent
-                      className={`col-span-3 ${
-                        errors.user_id ? "border-red-600" : ""
-                      }`}
-                    >
-                      <SelectGroup>
-                        <SelectLabel>Liste des adhérents</SelectLabel>
-                        {users
-                          ?.filter((user) => user.role === "Adhérent")
-                          .map((user) => (
-                            <SelectItem
-                              key={user.user_id}
-                              value={user.user_id.toString()}
-                            >
-                              {user.email +
-                                ": " +
-                                user.name +
-                                " " +
-                                user.firstname}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.user_id && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.user_id.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_deb" className="text-center">
-                Date de début
-              </Label>
-              <Controller
-                name="sanction_deb"
-                control={control}
-                rules={{ required: "La date de début est requise" }}
-                render={({ field }) => (
-                  <DatePicker
-                    selectedDate={field.value}
-                    onSelect={field.onChange}
-                    placeholder="Sélectionner une date"
-                    className={`col-span-3 ${
-                      errors.sanction_deb ? "border-red-600" : ""
-                    }`}
+      <ResponsiveDialog
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
+        title="Ajout de nouvelle sanction"
+        description="Formulaire pour ajouter une nouvelle sanction"
+      >
+        {create_sanction.isAdding ? (
+          <ActionLoading text="En cours d'enregistrement ..." />
+        ) : (
+          <form
+            onSubmit={handleSubmit(handleSubmitSanction)}
+            className="space-y-6"
+          >
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="user_id">Adhérent</Label>
+                <div className="relative">
+                  <UserIcon
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
                   />
-                )}
-              />
-              {errors.sanction_deb && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.sanction_deb.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_fin" className="text-center">
-                Date de fin
-              </Label>
-              <Controller
-                name="sanction_fin"
-                control={control}
-                rules={{ required: "La date de fin est requise" }}
-                render={({ field }) => (
-                  <DatePicker
-                    selectedDate={field.value}
-                    onSelect={field.onChange}
-                    placeholder="Sélectionner une date"
-                    className={`col-span-3 ${
-                      errors.sanction_fin ? "border-red-600" : ""
-                    }`}
+                  <Controller
+                    name="user_id"
+                    control={control}
+                    rules={{ required: "Adhérent est requis" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value?.toString()}
+                      >
+                        <SelectTrigger
+                          className={`border rounded-md p-1 shadow-sm ${
+                            errors.user_id ? "border-red-600" : ""
+                          }`}
+                        >
+                          <span className="pl-10">
+                            <SelectValue placeholder="Sélectionnez l'adhérent" />
+                          </span>
+                        </SelectTrigger>
+                        <SelectContent className="max-h-56">
+                          <SelectGroup>
+                            <SelectLabel>Liste des adhérents</SelectLabel>
+                            {users
+                              ?.filter((user) => user.role === "Adhérent")
+                              .map((user) => (
+                                <SelectItem
+                                  key={user.user_id}
+                                  value={user.user_id.toString()}
+                                >
+                                  {user.email +
+                                    ": " +
+                                    user.name +
+                                    " " +
+                                    user.firstname}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
+                </div>
+
+                {errors.user_id && (
+                  <p className="text-red-500 text-sm">
+                    {errors.user_id.message}
+                  </p>
                 )}
-              />
-              {errors.sanction_fin && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.sanction_fin.message}
-                </p>
-              )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="sanction_deb">Date de début</Label>
+                <div className="relative">
+                  <Controller
+                    name="sanction_deb"
+                    control={control}
+                    rules={{ required: "La date de début est requise" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        selectedDate={field.value}
+                        onSelect={field.onChange}
+                        placeholder="Sélectionner une date"
+                        className={`w-full ${
+                          errors.sanction_deb ? "border-red-600" : ""
+                        }`}
+                      />
+                    )}
+                  />
+                </div>
+                {errors.sanction_deb && (
+                  <p className="text-red-500 text-sm">
+                    {errors.sanction_deb.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="sanction_fin">Date de fin</Label>
+                <div className="relative">
+                  <Controller
+                    name="sanction_fin"
+                    control={control}
+                    rules={{ required: "La date de fin est requise" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        selectedDate={field.value}
+                        onSelect={field.onChange}
+                        placeholder="Sélectionner une date"
+                        className={`w-full ${
+                          errors.sanction_fin ? "border-red-600" : ""
+                        }`}
+                      />
+                    )}
+                  />
+                </div>
+                {errors.sanction_fin && (
+                  <p className="text-red-500 text-sm">
+                    {errors.sanction_fin.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="sanction_motif" className="text-center">
-                Motif
-              </Label>
-              <Input
-                {...register("sanction_motif", {
-                  required: "Le motif est requis",
-                })}
-                className={`col-span-3 ${
-                  errors.sanction_motif ? "border-red-600" : ""
-                }`}
-              />
+            <div className="space-y-2">
+              <Label htmlFor="sanction_motif">Motif</Label>
+              <div className="relative">
+                <InfoIcon
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <Input
+                  {...register("sanction_motif", {
+                    required: "Le motif est requis",
+                  })}
+                  className={`pl-10 ${
+                    errors.sanction_motif ? "border-red-600" : ""
+                  }`}
+                />
+              </div>
+
               {errors.sanction_motif && (
-                <p className="text-red-600 text-center col-span-4">
+                <p className="text-red-500 text-sm">
                   {errors.sanction_motif.message}
                 </p>
               )}
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setIsAddOpen(false);
-              }}
-            >
-              Annuler
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+
+            <DialogFooter className="gap-2">
+              <Button type="submit" className="min-w-[90px]">
+                Ok
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setIsAddOpen(false);
+                }}
+              >
+                Annuler
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
+      </ResponsiveDialog>
+    </>
   );
 }

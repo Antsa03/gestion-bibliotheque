@@ -1,22 +1,18 @@
 import * as React from "react";
-
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 export function ResponsiveDialog({
@@ -37,11 +33,13 @@ export function ResponsiveDialog({
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px] w-full max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle className="text-2xl">{title}</DialogTitle>
             {description && (
-              <DialogDescription>{description}</DialogDescription>
+              <DialogDescription className="text-lg">
+                {description}
+              </DialogDescription>
             )}
           </DialogHeader>
           {children}
@@ -52,12 +50,16 @@ export function ResponsiveDialog({
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{title}</DrawerTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
+      <DrawerContent className="h-[85vh] flex flex-col">
+        <DrawerHeader className="text-left flex-shrink-0">
+          <DrawerTitle className="text-xl">{title}</DrawerTitle>
+          {description && (
+            <DialogDescription className="text-sm">
+              {description}
+            </DialogDescription>
+          )}
         </DrawerHeader>
-        {children}
+        <ScrollArea className="flex-grow px-4 pb-4">{children}</ScrollArea>
       </DrawerContent>
     </Drawer>
   );

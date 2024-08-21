@@ -16,6 +16,7 @@ import { useFetchData } from "@/hooks/useFetchData.hook";
 import { User } from "@prisma/client";
 import { UserDataTable } from "./_components/user-data-table.component";
 import Link from "next/link";
+import { HashLoader } from "react-spinners";
 
 function UserPage() {
   //Logique de listage
@@ -54,7 +55,7 @@ function UserPage() {
             <div className="w-full p-2 min-h-[350px]">
               {isLoading ? (
                 <div className="w-full h-[345px] flex items-center justify-center">
-                  Chargement ...
+                  <HashLoader />
                 </div>
               ) : (
                 <>

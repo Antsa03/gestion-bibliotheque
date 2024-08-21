@@ -1,4 +1,6 @@
 "use client";
+import ActionLoading from "@/components/action-loading.component";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +16,7 @@ import { useCreate } from "@/hooks/useCreate.hook";
 import { showToast } from "@/lib/showSwal";
 import { Proprietaire } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, SquareUser } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -57,54 +59,65 @@ export default function AddModalProprietaire() {
   }, [isAddOpen, setIsAddOpen]);
 
   return (
-    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+    <>
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouveau propriétaire
       </Button>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Ajout de nouveau propriétaire</DialogTitle>
-          <DialogDescription>
-            Formulaire pour ajouter de nouveau propriétaire
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitProprietaire)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="proprietaire_nom" className="text-center">
-                Nom du propriétaire
-              </Label>
-              <Input
-                {...register("proprietaire_nom", {
-                  required: "Le nom du propriétaire est requis",
-                })}
-                className={`col-span-3 ${
-                  errors.proprietaire_nom ? "border-red-600" : ""
-                }`}
-              />
-              {errors.proprietaire_nom && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.proprietaire_nom.message}
-                </p>
-              )}
+      <ResponsiveDialog
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
+        title="Ajout de nouveau propriétaire"
+        description="Formulaire pour ajouter de nouveau propriétaire"
+      >
+        {create_proprietaire.isAdding ? (
+          <ActionLoading text="En cours d'enregistrement ..." />
+        ) : (
+          <form
+            onSubmit={handleSubmit(handleSubmitProprietaire)}
+            className="space-y-6"
+          >
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="auteur_nom">Nom du propriétaire</Label>
+                <div className="relative">
+                  <SquareUser
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <Input
+                    {...register("proprietaire_nom", {
+                      required: "Le nom du propriétaire est requis",
+                    })}
+                    className={`pl-10 ${
+                      errors.proprietaire_nom ? "border-red-500" : ""
+                    }`}
+                    placeholder="nom ..."
+                  />
+                </div>
+                {errors.proprietaire_nom && (
+                  <p className="text-red-500 text-sm">
+                    {errors.proprietaire_nom.message}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setIsAddOpen(false);
-              }}
-            >
-              Annuler
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className="gap-2">
+              <Button type="submit" className="min-w-[90px]">
+                Ok
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setIsAddOpen(false);
+                }}
+              >
+                Annuler
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
+      </ResponsiveDialog>
+    </>
   );
 }

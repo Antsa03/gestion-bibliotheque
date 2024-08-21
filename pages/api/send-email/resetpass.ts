@@ -29,7 +29,7 @@ export default async function handler(
           <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Réinitialisation du mot de passe RentAuto</title>
+            <title>Réinitialisation du mot de passe BiblioTech</title>
             <style>
               /* Couleurs */
               body {
@@ -106,7 +106,7 @@ export default async function handler(
         
               <p>Cordialement,</p>
         
-              <p>L'équipe de biblio</p>
+              <p>L'équipe de BiblioTech</p>
             </div>
           </body>
         </html>      
