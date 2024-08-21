@@ -18,7 +18,7 @@ export default async function handler(
     });
     if (delete_emprunt) {
       await prisma.exemplaire.update({
-        where: { code_barre: delete_emprunt.code_barre },
+        where: { isbn: delete_emprunt.isbn },
         data: {
           disponible: true,
         },

@@ -16,7 +16,7 @@ export default async function handler(
         emprunt_date: new Date(emprunt.emprunt_date),
         emprunt_retour_prevue: new Date(emprunt.emprunt_retour_prevue),
         user_id: emprunt.user_id,
-        code_barre: emprunt.code_barre,
+        isbn: emprunt.isbn,
       },
       include: {
         user: true,
