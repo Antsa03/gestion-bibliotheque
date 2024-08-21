@@ -29,6 +29,8 @@ import {
 import UpdateModalLivre from "./_components/update-modal-livres.component";
 import { saveAs } from "file-saver";
 import { Input } from "@/components/ui/input";
+import { X } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type Livre = PrismaLivre & {
   auteur: Auteur;
@@ -105,9 +107,12 @@ function LivresPage() {
   if (isError) return <div>Erreur: {error.message}</div>;
 
   return (
-    <div className="p-2">
-      <h1>Livres</h1>
-      <AddModalLivre />
+    <div className="relative h-full w-full min-h-screen">
+      <div className="w-full flex justify-between mt-4 mb-4">
+        <h1 className="text-2xl font-bold capitalize ">Livres</h1>
+        <AddModalLivre />
+      </div>
+
       <div className="mb-4 flex gap-4">
         <Input
           placeholder="Rechercher par titre"
@@ -163,58 +168,76 @@ function LivresPage() {
           Réinitialiser les filtres
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-8 mt-8">
         {filteredLivres?.map((livre) => (
           <Card
             key={livre.livre_id}
-            className="shadow-lg border border-gray-200"
+            className="relative  border border-gray-200"
           >
-            <CardHeader>
+            <CardHeader className="relative">
               <Image
                 src={IMG_BASE_URL + livre.couverture}
                 alt={`Couverture de ${livre.titre}`}
-                width={250}
-                height={250}
-                className="w-full h-64 object-cover rounded-sm"
+                width={240}
+                height={240}
+                className="w-full h-[240px] object-cover rounded-sm"
               />
+              <span className="absolute bottom-1 right-8 text-accent-foreground font-bold">
+                {livre.nb_pages} pages
+              </span>
             </CardHeader>
-            <CardContent>
+
+            <CardContent className="pt-6 pb-0">
               <CardTitle>{livre.titre}</CardTitle>
-              <CardDescription className="flex flex-col">
-                <span>{livre.description}</span>
-                <span>Auteur: {livre.auteur.auteur_nom}</span>
-                <span>Propriétaire: {livre.proprietaire.proprietaire_nom}</span>
-                <span>Pages: {livre.nb_pages}</span>
-                <span>Type: {livre.type_livre}</span>
-                <span>Domaine: {livre.domaine}</span>
+              <CardDescription className="flex flex-col text-sm mt-2">
+                <span className=" truncate  capitalize">
+                  Description: {livre.description}
+                </span>
+                <span>
+                  Auteur:
+                  <span className="italic">{livre.auteur.auteur_nom}</span>
+                </span>
+                <Separator className="my-3" />
+                <div className="w-full grid grid-cols-2 gap-4">
+                  <span>Type: {livre.type_livre}</span>
+                  <span className="text-end">Domaine: {livre.domaine}</span>
+                </div>
+                <span className="text-primary-foreground text-sm font-semibold">
+                  Propriétaire: {livre.proprietaire.proprietaire_nom}
+                </span>
+                {/* <span>Pages: {livre.nb_pages}</span> */}
               </CardDescription>
             </CardContent>
-            <CardFooter className="flex justify-center gap-4">
+            <CardFooter className="flex  justify-end gap-4 px-8 pt-0 pb-6">
               <UpdateModalLivre
                 livre={livre}
                 isEditOpen={isEditOpen}
                 setIsEditOpen={setIsEditOpen}
               />
+              <Button
+                className="px-4 py-1.5"
+                onClick={() => setIsEditOpen(true)}
+                variant="edit"
+              >
+                Modifier
+              </Button>
               {livre.livre_numerique && (
                 <Button
-                  className="bg-green-500 hover:bg-green-700 text-white"
+                  className="px-4 py-1.5"
+                  variant="download"
                   onClick={() => handleDownload(livre.livre_numerique)}
                 >
                   Télécharger
                 </Button>
               )}
               <Button
-                className="bg-yellow-500 hover:bg-yellow-700 text-white"
-                onClick={() => setIsEditOpen(true)}
-              >
-                Modifier
-              </Button>
-              <Button
                 type="button"
                 onClick={() => delete_livre.handleDelete(livre.livre_id)}
-                className="bg-red-500 hover:bg-red-700 text-white"
+                variant="delete"
+                className="absolute top-1 right-2 p-3 translate-x-1 w-fit flex justify-center items-center rounded-full"
               >
-                Supprimer
+                <X className="size-4" />
               </Button>
             </CardFooter>
           </Card>

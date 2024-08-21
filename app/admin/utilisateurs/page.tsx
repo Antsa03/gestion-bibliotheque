@@ -19,14 +19,23 @@ function UserPage() {
     queryFn: fetchData,
   });
 
-  if (isLoading) return <div>Chargement ...</div>;
+  // if (isLoading) return <div>Chargement ...</div>;
   if (isError) return <div>Erreur: {error.message}</div>;
 
   return (
-    <div className="p-2">
-      <h1>utilisateurs</h1>
-      <AddUserComponent />
-      <UserDataTable users={users ?? []} />
+    <div className="relative h-full w-full min-h-screen">
+      <div className="w-full flex justify-between mt-4 mb-4">
+        <h1 className="text-2xl font-bold capitalize ">utilisateurs</h1>
+        <AddUserComponent />
+      </div>
+
+      {isLoading ? (
+        <div className="relative h-full w-full flex justify-center items-center">
+          Chargement ...
+        </div>
+      ) : (
+        <UserDataTable users={users ?? []} />
+      )}
     </div>
   );
 }

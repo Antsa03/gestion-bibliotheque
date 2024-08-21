@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import InputError from "@/components/ui/input-error";
 import { Label } from "@/components/ui/label";
 import { useUpdate } from "@/hooks/useUpdate.hook";
 import { showToast } from "@/lib/showSwal";
@@ -64,9 +65,9 @@ export default function UpdateModalProprietaire({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modification du propriétaire</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour modifier le propriétaire
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAuteur)}>
           <div className="grid gap-4 py-4">
@@ -83,22 +84,24 @@ export default function UpdateModalProprietaire({
                 }`}
               />
               {errors.proprietaire_nom && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.proprietaire_nom.message}
-                </p>
+                <InputError
+                  message={errors.proprietaire_nom?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => setIsEditOpen(false)}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
+            </Button>
+            <Button type="submit" className="w-[90px]">
+              Modifier
             </Button>
           </DialogFooter>
         </form>

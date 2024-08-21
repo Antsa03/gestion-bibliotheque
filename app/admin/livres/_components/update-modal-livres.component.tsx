@@ -27,6 +27,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useFetchData } from "@/hooks/useFetchData.hook";
 import { useUpdate } from "@/hooks/useUpdate.hook";
+import InputError from "@/components/ui/input-error";
 
 type UpdateModalLivreProps = {
   livre: Livre;
@@ -135,17 +136,17 @@ export default function UpdateModalLivre({
 
   return (
     <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Modification du livre</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour modifier un livre
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitLivre)}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="titre" className="text-center">
+              <Label htmlFor="titre" className="text-left">
                 Titre
               </Label>
               <Input
@@ -155,13 +156,14 @@ export default function UpdateModalLivre({
                 className={`col-span-3 ${errors.titre ? "border-red-600" : ""}`}
               />
               {errors.titre && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.titre.message}
-                </p>
+                <InputError
+                  message={errors.titre.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="nb_pages" className="text-center">
+              <Label htmlFor="nb_pages" className="text-left">
                 Nombre de page
               </Label>
               <Input
@@ -172,32 +174,36 @@ export default function UpdateModalLivre({
                 type="number"
               />
               {errors.nb_pages && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.nb_pages.message}
-                </p>
+                <InputError
+                  message={errors.nb_pages.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="titre" className="text-center">
+              <Label htmlFor="titre" className="text-left">
                 Description
               </Label>
               <Textarea
                 {...register("description", {
                   required: "La désignation est requise",
                 })}
-                className={`col-span-3 ${
+                className={`col-span-3 bg-primary ${
                   errors.description ? "border-red-600" : ""
                 }`}
                 placeholder="Petite description du livre"
               />
               {errors.description && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.description.message}
-                </p>
+                <InputError
+                  message={errors.description.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="type_livre" className="text-center">
+              <Label htmlFor="type_livre" className="text-left">
                 Type du livre
               </Label>
               <Controller
@@ -206,7 +212,7 @@ export default function UpdateModalLivre({
                 rules={{ required: "Le type de livre est requis" }}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez un type de livre" />
                     </SelectTrigger>
                     <SelectContent

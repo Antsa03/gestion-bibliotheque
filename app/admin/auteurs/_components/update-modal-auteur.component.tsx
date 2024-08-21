@@ -57,13 +57,13 @@ export default function UpdateModalAuteur({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modification de l'auteur</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour modifier l'auteur
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAuteur)}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
+            <div className="grid grid-cols-4 items-center gap-2">
               <Label htmlFor="auteur_nom" className="text-center">
                 Nom de l'auteur
               </Label>
@@ -83,16 +83,15 @@ export default function UpdateModalAuteur({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => setIsEditOpen(false)}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
             </Button>
+            <Button type="submit">Modifier</Button>
           </DialogFooter>
         </form>
       </DialogContent>

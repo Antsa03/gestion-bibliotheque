@@ -24,6 +24,7 @@ import { User } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import InputError from "@/components/ui/input-error";
 
 type UpdateModalUserProps = {
   user: User;
@@ -83,20 +84,20 @@ export default function UpdateModalUser({
 
   return (
     <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-      <DialogContent>
+      <DialogContent className="max-h-[80vh] overflow-y-auto ">
         <DialogHeader>
-          <DialogTitle className="text-center">
-            Modication d'utilisateur
+          <DialogTitle className="text-left">
+            Modification d'utilisateur
           </DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour modifier l'utilisateur
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitUser)}>
           <div className="grid gap-4 py-4">
             {/* Profile */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="profile" className="text-center">
+              <Label htmlFor="profile" className="text-left">
                 Profile
               </Label>
               <Input
@@ -106,7 +107,7 @@ export default function UpdateModalUser({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="name" className="text-center">
+              <Label htmlFor="name" className="text-left">
                 Nom
               </Label>
               <Input
@@ -116,13 +117,15 @@ export default function UpdateModalUser({
                 className={`col-span-3 ${errors.name ? "border-red-600" : ""}`}
               />
               {errors.name && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.name.message}
-                </p>
+                <InputError
+                  message={errors.name?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="firstname" className="text-center">
+              <Label htmlFor="firstname" className="text-left">
                 Prénom
               </Label>
               <Input
@@ -132,13 +135,15 @@ export default function UpdateModalUser({
                 }`}
               />
               {errors.firstname && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.firstname.message}
-                </p>
+                <InputError
+                  message={errors.firstname?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
+              <Label htmlFor="address" className="text-left">
                 Adresse
               </Label>
               <Input
@@ -148,13 +153,15 @@ export default function UpdateModalUser({
                 }`}
               />
               {errors.address && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.address.message}
-                </p>
+                <InputError
+                  message={errors.address?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
+              <Label htmlFor="address" className="text-left">
                 Téléphone
               </Label>
               <Input
@@ -169,13 +176,15 @@ export default function UpdateModalUser({
                 className={`col-span-3 ${errors.phone ? "border-red-600" : ""}`}
               />
               {errors.phone && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.phone.message}
-                </p>
+                <InputError
+                  message={errors.phone?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="role" className="text-center">
+              <Label htmlFor="role" className="text-left">
                 Rôle
               </Label>
               <Controller
@@ -184,7 +193,7 @@ export default function UpdateModalUser({
                 rules={{ required: "Rôle est requis" }}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez le rôle de l'utilisateur" />
                     </SelectTrigger>
                     <SelectContent
@@ -204,13 +213,15 @@ export default function UpdateModalUser({
                 )}
               />
               {errors.role && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.role.message}
-                </p>
+                <InputError
+                  message={errors.role?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="email" className="text-center">
+              <Label htmlFor="email" className="text-left">
                 Email
               </Label>
               <Input
@@ -224,25 +235,25 @@ export default function UpdateModalUser({
                 className={`col-span-3 ${errors.email ? "border-red-600" : ""}`}
               />
               {errors.email && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.email.message}
-                </p>
+                <InputError
+                  message={errors.email?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => {
                 setIsEditOpen(false);
               }}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
             </Button>
+            <Button type="submit">Modifier</Button>
           </DialogFooter>
         </form>
       </DialogContent>

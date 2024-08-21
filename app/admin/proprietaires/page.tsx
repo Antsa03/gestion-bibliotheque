@@ -18,13 +18,22 @@ function ProprietairePage() {
     queryFn: proprietaire_data.fetchData,
   });
 
-  if (isLoading) return <div>Chargement ...</div>;
+  // if (isLoading) return <div>Chargement ...</div>;
   if (isError) return <div>Erreur: {error.message}</div>;
   return (
-    <div className="p-4">
-      <h1>proprietaires</h1>
-      <AddModalProprietaire />
-      <ProprietaireDataTable proprietaires={proprietaires ?? []} />
+    <div className="relative h-full w-full min-h-screen">
+      <div className="w-full flex justify-between mt-4 mb-4">
+        <h1 className="text-2xl font-bold capitalize ">Proprietaires</h1>
+        <AddModalProprietaire />
+      </div>
+
+      {isLoading ? (
+        <div className="relative h-full w-full flex justify-center items-center">
+          Chargement ...
+        </div>
+      ) : (
+        <ProprietaireDataTable proprietaires={proprietaires ?? []} />
+      )}
     </div>
   );
 }

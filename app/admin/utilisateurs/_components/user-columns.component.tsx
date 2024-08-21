@@ -28,9 +28,9 @@ export const columns: ColumnDef<User>[] = [
         <Image
           src={IMG_PROFILE_URL + row.original.profile}
           alt={`Profile de ${row.original.name}`}
-          width={90}
-          height={90}
-          className="object-cover rounded-full"
+          width={36}
+          height={36}
+          className="object-cover rounded-full  border-2 border-primary"
         />
       </div>
     ),

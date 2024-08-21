@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import InputError from "@/components/ui/input-error";
 import { Label } from "@/components/ui/label";
 import { useCreate } from "@/hooks/useCreate.hook";
 import { showToast } from "@/lib/showSwal";
@@ -58,15 +59,15 @@ export default function AddModalProprietaire() {
 
   return (
     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouveau propriétaire
       </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Ajout de nouveau propriétaire</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour ajouter de nouveau propriétaire
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitProprietaire)}>
           <div className="grid gap-4 py-4">
@@ -83,24 +84,27 @@ export default function AddModalProprietaire() {
                 }`}
               />
               {errors.proprietaire_nom && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.proprietaire_nom.message}
-                </p>
+                <InputError
+                  message={errors.proprietaire_nom?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => {
                 setIsAddOpen(false);
               }}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
+            </Button>
+
+            <Button type="submit" className="w-[90px]">
+              Ajouter
             </Button>
           </DialogFooter>
         </form>

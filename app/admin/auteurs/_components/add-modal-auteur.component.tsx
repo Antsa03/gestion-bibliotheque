@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import InputError from "@/components/ui/input-error";
 import { Label } from "@/components/ui/label";
 import { useCreate } from "@/hooks/useCreate.hook";
 import { showToast } from "@/lib/showSwal";
@@ -49,19 +50,19 @@ export default function AddModalAuteur() {
 
   return (
     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouvel auteur
       </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Ajout de nouvel auteur</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour ajouter de nouvel auteur
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAuteur)}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-1">
+            <div className="grid grid-cols-4 items-center gap-2">
               <Label htmlFor="auteur_nom" className="text-center">
                 Nom de l'auteur
               </Label>
@@ -74,25 +75,26 @@ export default function AddModalAuteur() {
                 }`}
               />
               {errors.auteur_nom && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.auteur_nom.message}
-                </p>
+                <InputError
+                  message={errors.auteur_nom?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => {
                 setIsAddOpen(false);
               }}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
             </Button>
+
+            <Button type="submit">Ajouter</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -27,7 +27,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { columns } from "./user-columns.component";
 import { User } from "@prisma/client";
 
@@ -126,7 +126,7 @@ export function UserDataTable({ users }: UserDataTableProps) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -147,7 +147,7 @@ export function UserDataTable({ users }: UserDataTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-48 text-center "
                 >
                   Aucun résultat.
                 </TableCell>

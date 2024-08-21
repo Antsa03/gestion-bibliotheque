@@ -25,6 +25,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, Eye, EyeOff } from "lucide-react";
 import { showToast } from "@/lib/showSwal";
+import InputError from "@/components/ui/input-error";
 
 type User = PrismaUser & {
   confirm_password: string;
@@ -89,32 +90,35 @@ function AddUserComponent() {
 
   return (
     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+      <Button onClick={() => setIsAddOpen(true)}>
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouvel utilisateur
       </Button>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+
+      <DialogContent className="max-h-[80vh] overflow-y-auto ">
         <DialogHeader>
           <DialogTitle>Ajout de nouvel utilisateur</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour ajouter de nouvel utilisateur
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
             {/* Profile */}
-            <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="profile" className="text-center">
+            <div className="grid grid-cols-4 items-center justify-start gap-1">
+              <Label htmlFor="profile" className="text-left">
                 Profile
               </Label>
               <Input
                 {...register("profile")}
-                className="col-span-3"
+                className="col-span-3 "
                 type="file"
               />
             </div>
+
             {/* Nom */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="name" className="text-center">
+              <Label htmlFor="name" className="text-left">
                 Nom
               </Label>
               <Input
@@ -124,16 +128,17 @@ function AddUserComponent() {
                 className={`col-span-3 ${errors.name ? "border-red-600" : ""}`}
               />
               {errors.name && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.name.message}
-                </p>
+                <InputError
+                  message={errors.name?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Prénom */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="firstname" className="text-center">
-                Prénom
+              <Label htmlFor="firstname" className="text-left">
+                Prénom(s)
               </Label>
               <Input
                 {...register("firstname", { required: "Prénom est requis" })}
@@ -142,15 +147,16 @@ function AddUserComponent() {
                 }`}
               />
               {errors.firstname && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.firstname.message}
-                </p>
+                <InputError
+                  message={errors.firstname?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Adresse */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
+              <Label htmlFor="address" className="text-left">
                 Adresse
               </Label>
               <Input
@@ -160,15 +166,16 @@ function AddUserComponent() {
                 }`}
               />
               {errors.address && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.address.message}
-                </p>
+                <InputError
+                  message={errors.address?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Téléphone */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="address" className="text-center">
+              <Label htmlFor="address" className="text-left">
                 Téléphone
               </Label>
               <Input
@@ -183,15 +190,16 @@ function AddUserComponent() {
                 className={`col-span-3 ${errors.phone ? "border-red-600" : ""}`}
               />
               {errors.phone && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.phone.message}
-                </p>
+                <InputError
+                  message={errors.phone?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Rôle */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="role" className="text-center">
+              <Label htmlFor="role" className="text-left">
                 Rôle
               </Label>
               <Controller
@@ -200,7 +208,7 @@ function AddUserComponent() {
                 rules={{ required: "Rôle est requis" }}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez le rôle de l'utilisateur" />
                     </SelectTrigger>
                     <SelectContent
@@ -220,15 +228,16 @@ function AddUserComponent() {
                 )}
               />
               {errors.role && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.role.message}
-                </p>
+                <InputError
+                  message={errors.role?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Email */}
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="email" className="text-center">
+              <Label htmlFor="email" className="text-left">
                 Email
               </Label>
               <Input
@@ -242,15 +251,16 @@ function AddUserComponent() {
                 className={`col-span-3 ${errors.email ? "border-red-600" : ""}`}
               />
               {errors.email && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.email.message}
-                </p>
+                <InputError
+                  message={errors.email?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Mot de passe */}
             <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="password" className="text-center">
+              <Label htmlFor="password" className="text-left">
                 Mot de passe
               </Label>
               <div className="col-span-3 relative">
@@ -278,15 +288,16 @@ function AddUserComponent() {
                 </Button>
               </div>
               {errors.password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.password.message}
-                </p>
+                <InputError
+                  message={errors.password?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
 
             {/* Confirmation Mot de passe */}
             <div className="grid grid-cols-4 items-center gap-1 relative">
-              <Label htmlFor="confirm_password" className="text-center">
+              <Label htmlFor="confirm_password" className="text-left">
                 Confirmation Mot de passe
               </Label>
               <div className="col-span-3 relative">
@@ -312,25 +323,25 @@ function AddUserComponent() {
                 </Button>
               </div>
               {errors.confirm_password && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.confirm_password.message}
-                </p>
+                <InputError
+                  message={errors.confirm_password?.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => {
                 setIsAddOpen(false);
               }}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
             </Button>
+            <Button type="submit">Ajouter</Button>
           </DialogFooter>
         </form>
       </DialogContent>

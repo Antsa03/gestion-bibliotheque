@@ -28,6 +28,7 @@ import { CirclePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useFetchData } from "@/hooks/useFetchData.hook";
+import InputError from "@/components/ui/input-error";
 
 export default function AddModalLivre() {
   const {
@@ -117,20 +118,22 @@ export default function AddModalLivre() {
 
   return (
     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-      <Button onClick={() => setIsAddOpen(true)} className="w-[300px]">
+      <Button onClick={() => setIsAddOpen(true)} className="">
         <CirclePlus className="h-5 w-5 mr-2" /> Ajouter un nouveau livre
       </Button>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Ajout de nouveau livre</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Formulaire pour ajouter de nouveau livre
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
+
         <form onSubmit={handleSubmit(handleSubmitLivre)}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="titre" className="text-center">
+              <Label htmlFor="titre" className="text-left">
                 Titre
               </Label>
               <Input
@@ -140,13 +143,15 @@ export default function AddModalLivre() {
                 className={`col-span-3 ${errors.titre ? "border-red-600" : ""}`}
               />
               {errors.titre && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.titre.message}
-                </p>
+                <InputError
+                  message={errors.titre.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="nb_pages" className="text-center">
+              <Label htmlFor="nb_pages" className="text-left">
                 Nombre de page
               </Label>
               <Input
@@ -157,32 +162,36 @@ export default function AddModalLivre() {
                 type="number"
               />
               {errors.nb_pages && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.nb_pages.message}
-                </p>
+                <InputError
+                  message={errors.nb_pages.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="titre" className="text-center">
+              <Label htmlFor="titre" className="text-left">
                 Description
               </Label>
               <Textarea
                 {...register("description", {
                   required: "La désignation est requise",
                 })}
-                className={`col-span-3 ${
+                className={`col-span-3 bg-primary ${
                   errors.description ? "border-red-600" : ""
                 }`}
                 placeholder="Petite description du livre"
               />
               {errors.description && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.description.message}
-                </p>
+                <InputError
+                  message={errors.description.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
+            
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="type_livre" className="text-center">
+              <Label htmlFor="type_livre" className="text-left">
                 Type du livre
               </Label>
               <Controller
@@ -191,7 +200,7 @@ export default function AddModalLivre() {
                 rules={{ required: "Le type de livre est requis" }}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez un type de livre" />
                     </SelectTrigger>
                     <SelectContent
@@ -224,13 +233,14 @@ export default function AddModalLivre() {
                 )}
               />
               {errors.type_livre && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.type_livre.message}
-                </p>
+                <InputError
+                  message={errors.type_livre.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="domaine" className="text-center">
+              <Label htmlFor="domaine" className="text-left">
                 Domaine
               </Label>
               <Controller
@@ -239,7 +249,7 @@ export default function AddModalLivre() {
                 rules={{ required: "Le domaine est requis" }}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez un domaine" />
                     </SelectTrigger>
                     <SelectContent
@@ -273,13 +283,14 @@ export default function AddModalLivre() {
                 )}
               />
               {errors.domaine && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.domaine.message}
-                </p>
+                <InputError
+                  message={errors.domaine.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="couverture" className="text-center">
+              <Label htmlFor="couverture" className="text-left">
                 Couverture
               </Label>
               <Input
@@ -292,13 +303,14 @@ export default function AddModalLivre() {
                 type="file"
               />
               {errors.couverture && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.couverture.message}
-                </p>
+                <InputError
+                  message={errors.couverture.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="livre_numerique" className="text-center">
+              <Label htmlFor="livre_numerique" className="text-left">
                 Livre numérique
               </Label>
               <Input
@@ -308,7 +320,7 @@ export default function AddModalLivre() {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="auteur_id" className="text-center">
+              <Label htmlFor="auteur_id" className="text-left">
                 Auteur
               </Label>
               <Controller
@@ -320,7 +332,7 @@ export default function AddModalLivre() {
                     onValueChange={field.onChange}
                     value={field.value?.toString()}
                   >
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez l'auteur" />
                     </SelectTrigger>
                     <SelectContent
@@ -344,13 +356,14 @@ export default function AddModalLivre() {
                 )}
               />
               {errors.auteur_id && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.auteur_id.message}
-                </p>
+                <InputError
+                  message={errors.auteur_id.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
             <div className="grid grid-cols-4 items-center gap-1">
-              <Label htmlFor="proprietaire_id" className="text-center">
+              <Label htmlFor="proprietaire_id" className="text-left">
                 Propriétaire
               </Label>
               <Controller
@@ -362,7 +375,7 @@ export default function AddModalLivre() {
                     onValueChange={field.onChange}
                     value={field.value?.toString()}
                   >
-                    <SelectTrigger className="col-span-3 border rounded-md p-1 shadow-sm">
+                    <SelectTrigger className="col-span-3 border border-input bg-primary rounded-full px-4 py-2">
                       <SelectValue placeholder="Sélectionnez le proprietaire" />
                     </SelectTrigger>
                     <SelectContent
@@ -386,24 +399,27 @@ export default function AddModalLivre() {
                 )}
               />
               {errors.proprietaire_id && (
-                <p className="text-red-600 text-center col-span-4">
-                  {errors.proprietaire_id.message}
-                </p>
+                <InputError
+                  message={errors.proprietaire_id.message}
+                  classname="col-start-2 col-span-3 pl-2"
+                />
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-[90px]">
-              Ok
-            </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="no-bg-destructive"
               onClick={() => {
                 setIsAddOpen(false);
               }}
+              className="hover:bg-red-100 rounded-full"
             >
               Annuler
+            </Button>
+
+            <Button type="submit" className="w-[90px]">
+              Ajouter
             </Button>
           </DialogFooter>
         </form>

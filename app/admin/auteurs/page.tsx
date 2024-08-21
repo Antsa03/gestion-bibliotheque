@@ -18,13 +18,22 @@ function AuteurPage() {
     queryFn: auteur_data.fetchData,
   });
 
-  if (isLoading) return <div>Chargement ...</div>;
+  // if (isLoading) return <div>Chargement ...</div>;
   if (isError) return <div>Erreur: {error.message}</div>;
   return (
-    <div className="p-4">
-      <h1>Auteurs</h1>
-      <AddModalAuteur />
-      <AuteurDataTable auteurs={auteurs ?? []} />
+    <div className="relative h-full w-full min-h-screen">
+      <div className="w-full flex justify-between mt-4 mb-4">
+        <h1 className="text-2xl font-bold capitalize ">Auteurs</h1>
+        <AddModalAuteur />
+      </div>
+
+      {isLoading ? (
+        <div className="relative h-full w-full flex justify-center items-center">
+          Chargement ...
+        </div>
+      ) : (
+        <AuteurDataTable auteurs={auteurs ?? []} />
+      )}
     </div>
   );
 }
