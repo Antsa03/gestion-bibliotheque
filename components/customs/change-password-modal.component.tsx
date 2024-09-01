@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { DialogFooter } from "../ui/dialog";
 import { signOut, useSession } from "next-auth/react";
 import bcrypt from "bcryptjs";
@@ -95,27 +95,32 @@ export default function ChangePasswordModal({
       title="Modification de mot de passe"
       description="Formulaire pour modifier votre mot de passe"
     >
-      <form onSubmit={handleSubmit(handleSubmitChangePassword)}>
-        <div className="grid gap-4 py-4">
+      <form
+        onSubmit={handleSubmit(handleSubmitChangePassword)}
+        className="space-y-6"
+      >
+        <div className="space-y-4">
           {/* Ancien mot de passe */}
-          <div className="grid grid-cols-4 items-center gap-1 relative">
-            <Label htmlFor="old_password" className="text-center">
-              Ancien mot de passe
-            </Label>
-            <div className="col-span-3 relative">
+          <div className="space-y-2">
+            <Label htmlFor="old_password">Ancien mot de passe</Label>
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <Input
                 {...register("old_password", {
                   required: "L'ancien mot de passe est requis",
                 })}
                 type={showOldPassword ? "text" : "password"}
-                className={`w-full ${
+                className={`pl-10 ${
                   errors.old_password ? "border-red-600" : ""
                 }`}
               />
               <Button
                 type="button"
-                className="absolute right-0 top-0"
-                onClick={() => setShowOldPassword(!showPassword)}
+                className="absolute right-0 top-0 hover:bg-transparent"
+                onClick={() => setShowOldPassword(!showOldPassword)}
                 variant="ghost"
               >
                 {showOldPassword ? <EyeOff /> : <Eye />}
@@ -129,11 +134,13 @@ export default function ChangePasswordModal({
           </div>
 
           {/* Mot de passe */}
-          <div className="grid grid-cols-4 items-center gap-1 relative">
-            <Label htmlFor="password" className="text-center">
-              Mot de passe
-            </Label>
-            <div className="col-span-3 relative">
+          <div className="space-y-2">
+            <Label htmlFor="password">Mot de passe</Label>
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <Input
                 {...register("password", {
                   required: "Le mot de passe est requis",
@@ -144,11 +151,11 @@ export default function ChangePasswordModal({
                   },
                 })}
                 type={showPassword ? "text" : "password"}
-                className={`w-full ${errors.password ? "border-red-600" : ""}`}
+                className={`pl-10 ${errors.password ? "border-red-600" : ""}`}
               />
               <Button
                 type="button"
-                className="absolute right-0 top-0"
+                className="absolute right-0 top-0 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
                 variant="ghost"
               >
@@ -163,11 +170,13 @@ export default function ChangePasswordModal({
           </div>
 
           {/* Confirmation Mot de passe */}
-          <div className="grid grid-cols-4 items-center gap-1 relative">
-            <Label htmlFor="confirm_password" className="text-center">
-              Confirmation Mot de passe
-            </Label>
-            <div className="col-span-3 relative">
+          <div className="space-y-2">
+            <Label htmlFor="confirm_password">Confirmation Mot de passe</Label>
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <Input
                 {...register("confirm_password", {
                   required: "Confirmation de mot de passe est requise",
@@ -176,13 +185,13 @@ export default function ChangePasswordModal({
                     "Les mots de passe ne correspondent pas",
                 })}
                 type={showConfirm_password ? "text" : "password"}
-                className={`w-full ${
+                className={`pl-10 ${
                   errors.confirm_password ? "border-red-600" : ""
                 }`}
               />
               <Button
                 type="button"
-                className="absolute right-0 top-0"
+                className="absolute right-0 top-0 hover:bg-transparent"
                 onClick={() => setShowConfirm_password(!showConfirm_password)}
                 variant="ghost"
               >

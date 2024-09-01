@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CirclePlus, Library, User as UserIcon } from "lucide-react";
+import { Library, User as UserIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useUpdate } from "@/hooks/useUpdate.hook";
 import { showToast } from "@/lib/showSwal";

@@ -27,7 +27,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, FilterIcon } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Sanction as PrismaSanction, User } from "@prisma/client";
 import { columns } from "./sanction-columns.component";
@@ -83,7 +83,7 @@ export function SanctionDataTable({ sanctions }: SanctionDataTableProps) {
 
   return (
     <div className="w-full">
-      <div className="w-full flex items-center py-4 space-x-4">
+      <div className="w-full flex flex-col sm:flex-row items-start sm:items-center py-4 space-y-4 sm:space-y-0 sm:space-x-4">
         <Input
           placeholder="Recherche par nom ..."
           value={
@@ -92,49 +92,62 @@ export function SanctionDataTable({ sanctions }: SanctionDataTableProps) {
           onChange={(event) =>
             table.getColumn("nom_adherent")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-full sm:max-w-sm"
         />
-        <DatePicker
-          selectedDate={startDate}
-          onSelect={(date) => handleDateChange(date, endDate)}
-          placeholder="Date de début"
-          className="w-[240px]"
-        />
-        <DatePicker
-          selectedDate={endDate}
-          onSelect={(date) => handleDateChange(startDate, date)}
-          placeholder="Date de fin"
-          className="w-[240px]"
-        />
-        <Button variant="outline" onClick={resetDates}>
-          Réinitialiser les dates
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Colonnes <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+          <DatePicker
+            selectedDate={startDate}
+            onSelect={(date) => handleDateChange(date, endDate)}
+            placeholder="Date de début"
+            className="w-full sm:w-[240px]"
+          />
+          <DatePicker
+            selectedDate={endDate}
+            onSelect={(date) => handleDateChange(startDate, date)}
+            placeholder="Date de fin"
+            className="w-full sm:w-[240px]"
+          />
+        </div>
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+          <Button
+            onClick={resetDates}
+            variant="outline"
+            className="flex items-center justify-start sm:justify-start gap-2 w-full sm:w-auto"
+          >
+            <FilterIcon className="h-4 w-4" />
+            <span>Réinitialiser</span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center justify-start gap-2"
+              >
+                <span>Colonnes</span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

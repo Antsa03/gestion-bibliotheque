@@ -104,7 +104,7 @@ export const columns: ColumnDef<Sanction>[] = [
   {
     accessorKey: "sanction_motif",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Motif" />
+      <DataTableColumnHeader column={column} title="Motif de la sanction" />
     ),
     cell: ({ row }) => <div>{row.getValue("sanction_motif")}</div>,
   },

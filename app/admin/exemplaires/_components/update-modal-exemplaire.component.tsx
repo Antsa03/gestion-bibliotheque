@@ -64,6 +64,7 @@ export default function UpdateModalExemplaire({
       );
       setIsEditOpen(false);
       queryClient.invalidateQueries({ queryKey: ["exemplaires"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     }
   );
 

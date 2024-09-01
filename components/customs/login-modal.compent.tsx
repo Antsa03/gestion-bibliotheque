@@ -115,10 +115,7 @@ function LoginModal() {
                   Adresse e-mail
                 </Label>
                 <div className="relative">
-                  <Mail
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={18}
-                  />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <Input
                     {...register("email", { required: "L'email est requis" })}
                     className="pl-10"
@@ -133,10 +130,7 @@ function LoginModal() {
                   Mot de passe
                 </Label>
                 <div className="relative">
-                  <Lock
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={18}
-                  />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <Input
                     {...register("password", {
                       required: "Le mot de passe est requis",
@@ -147,12 +141,11 @@ function LoginModal() {
                   />
                   <Button
                     type="button"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-0 top-0 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                     variant="ghost"
-                    size="sm"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff /> : <Eye />}
                   </Button>
                 </div>
               </div>

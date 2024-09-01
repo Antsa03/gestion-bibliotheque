@@ -61,7 +61,6 @@ function AddUserComponent() {
   const onSubmit = async (data: User) => {
     const formData = new FormData();
     let shouldUpload = false;
-
     if (data.profile && (data.profile as unknown as FileList).length > 0) {
       formData.append("profile", (data.profile as unknown as FileList)[0]);
       shouldUpload = true;
@@ -75,8 +74,9 @@ function AddUserComponent() {
 
       const result = await response.json();
       data.profile = result.profileFileName || "";
+    } else {
+      data.profile = "";
     }
-    data.profile = "";
     await create_user.handleAdd(data);
   };
 
@@ -298,11 +298,10 @@ function AddUserComponent() {
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-0 top-0 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff /> : <Eye />}
                   </Button>
                 </div>
                 {errors.password && (
@@ -337,17 +336,12 @@ function AddUserComponent() {
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-0 top-0 hover:bg-transparent"
                     onClick={() =>
                       setShowConfirm_password(!showConfirm_password)
                     }
                   >
-                    {showConfirm_password ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
+                    {showConfirm_password ? <EyeOff /> : <Eye />}
                   </Button>
                 </div>
                 {errors.confirm_password && (

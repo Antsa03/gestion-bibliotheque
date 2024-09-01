@@ -19,7 +19,6 @@ export default withAuth(async function middleware(req: NextRequestWithAuth) {
     const adherent_path: string[] = ["/livres", "/emprunts", "/api/adherent"];
     const common_paths: string[] = [
       "/api/download-file",
-      "/api/read-file",
       "/api/change-password",
       "/api/account-update",
     ];
@@ -70,7 +69,6 @@ export const config = {
     "/api/dashboard",
     "/api/adherent/:path*",
     "/api/download-file/:path*",
-    "/api/read-file/:path*",
     "/api/change-password/:path*",
     "/api/account-update/:path*",
   ],

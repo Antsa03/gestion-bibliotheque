@@ -94,7 +94,7 @@ function ResetPasswordComponent({
 
   return (
     <div className="w-full  flex flex-col items-center gap-4 p-4">
-      <p className="text-sm sm:text-lg text-center text-blue-700">
+      <p className="text-sm sm:text-lg text-center primary font-semibold">
         Votre email :
       </p>
       <p className="text-sm sm:text-lg max-w-[400px] w-full text-center bg-gray-300 rounded-md py-2 text-black font-bold mb-4">

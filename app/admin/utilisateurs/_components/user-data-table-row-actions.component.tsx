@@ -22,7 +22,8 @@ export function DataUserRowActions({ row }: { row: Row<User> }) {
   const mutation = useMutation({
     mutationFn: (id: string | number) => delete_user.handleDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["livres"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
   });
 

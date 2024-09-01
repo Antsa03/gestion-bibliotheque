@@ -212,11 +212,10 @@ function RegisterModal({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-0 top-0 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff /> : <Eye />}
                 </Button>
               </div>
               {errors.password && (
@@ -251,15 +250,10 @@ function RegisterModal({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-0 top-0 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showConfirmPassword ? <EyeOff /> : <Eye />}
                 </Button>
               </div>
               {errors.confirm_password && (

@@ -39,61 +39,68 @@ export default function ResetPasswordFinal({
   };
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full space-y-6">
       <form onSubmit={handleFormSubmit(onSubmit)} className="space-y-4">
         {/* Nouveau mot de passe */}
-        <div className="relative">
+        <div className="space-y-2">
           <Label htmlFor="password">Nouveau mot de passe</Label>
-          <Input
-            {...register("password", {
-              required: "Ce champ est obligatoire",
-              minLength: {
-                value: 8,
-                message: "Au moins 8 caractères",
-              },
-            })}
-            type={showPassword ? "text" : "password"}
-            className={`mt-1 w-full ${errors.password ? "border-red-600" : ""}`}
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            className="absolute right-0 top-7"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff /> : <Eye />}
-          </Button>
+          <div className="relative">
+            <Input
+              {...register("password", {
+                required: "Ce champ est obligatoire",
+                minLength: {
+                  value: 8,
+                  message: "Au moins 8 caractères",
+                },
+              })}
+              type={showPassword ? "text" : "password"}
+              className={`mt-1 w-full ${
+                errors.password ? "border-red-600" : ""
+              }`}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="absolute right-0 top-0 hover:bg-transparent"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </Button>
+          </div>
           {errors.password && (
             <p className="text-red-600">{errors.password.message}</p>
           )}
         </div>
 
         {/* Confirmer le mot de passe */}
-        <div className="relative">
+        <div className="space-y-2">
           <Label htmlFor="confirm_password">Confirmer le mot de passe</Label>
-          <Input
-            {...register("confirm_password", {
-              required: "Ce champ est obligatoire",
-              minLength: {
-                value: 8,
-                message: "Au moins 8 caractères",
-              },
-              validate: (value) =>
-                value === password || "Les mots de passe ne correspondent pas",
-            })}
-            type={showConfirmPassword ? "text" : "password"}
-            className={`mt-1 w-full ${
-              errors.confirm_password ? "border-red-600" : ""
-            }`}
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            className="absolute right-0 top-7"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? <EyeOff /> : <Eye />}
-          </Button>
+          <div className="relative">
+            <Input
+              {...register("confirm_password", {
+                required: "Ce champ est obligatoire",
+                minLength: {
+                  value: 8,
+                  message: "Au moins 8 caractères",
+                },
+                validate: (value) =>
+                  value === password ||
+                  "Les mots de passe ne correspondent pas",
+              })}
+              type={showConfirmPassword ? "text" : "password"}
+              className={`mt-1 w-full ${
+                errors.confirm_password ? "border-red-600" : ""
+              }`}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="absolute right-0 top-0 hover:bg-transparent"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <EyeOff /> : <Eye />}
+            </Button>
+          </div>
           {errors.confirm_password && (
             <p className="text-red-600">{errors.confirm_password.message}</p>
           )}

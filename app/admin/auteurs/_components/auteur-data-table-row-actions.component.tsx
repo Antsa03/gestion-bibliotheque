@@ -18,7 +18,7 @@ export function DataAuteurRowActions({ row }: { row: Row<Auteur> }) {
   const mutation = useMutation({
     mutationFn: (id: string | number) => delete_auteur.handleDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["livres"] });
+      queryClient.invalidateQueries({ queryKey: ["auteurs"] });
     },
   });
 
